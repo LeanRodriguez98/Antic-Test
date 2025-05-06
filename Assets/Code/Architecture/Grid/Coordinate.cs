@@ -19,6 +19,12 @@ namespace AnticTest.Architecture.Map
 
         public static bool operator !=(Coordinate lhs, Coordinate rhs) => !(lhs == rhs);
 
+        public static Coordinate operator /(Coordinate coordinate, int divider) => 
+            new Coordinate(coordinate.x / divider, coordinate.y / divider);
+
+        public static Coordinate operator *(Coordinate coordinate, int multiplier) =>
+            new Coordinate(coordinate.x * multiplier, coordinate.y * multiplier);
+
         public override string ToString()
         {
             return "{X = " + x + "; Y = " + y + "}";
