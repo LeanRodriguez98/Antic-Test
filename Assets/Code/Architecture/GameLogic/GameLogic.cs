@@ -1,11 +1,12 @@
 ﻿using AnticTest.Architecture.Entities;
 using AnticTest.Architecture.Map;
+using AnticTest.Architecture.Services;
 using AnticTest.Architecture.Utils;
 using System.Collections.Generic;
 
 namespace AnticTest.Architecture.GameLogic
 {
-	public class GameLogic
+	public class GameLogic : IService
 	{
 		private Grid<Cell> map;
 
@@ -31,6 +32,8 @@ namespace AnticTest.Architecture.GameLogic
 			{
 				enemies.Add(new EnemyBug(new Coordinate(0, y)));
 			}
+
+			ServiceProvider.Instance.AddService(typeof(GameLogic), this);
 		}
 	}
 }

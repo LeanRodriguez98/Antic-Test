@@ -1,6 +1,9 @@
+using AnticTest.Architecture.Services;
+
 namespace AnticTest.Architecture.Map
 {
-	public class Grid<TCell> where TCell : class, ICell, new()
+	public class Grid<TCell> : IService
+		where TCell : class, ICell, new()
 	{
 		private TCell[,] map;
 
@@ -26,6 +29,8 @@ namespace AnticTest.Architecture.Map
 					SetCell(newCell);
 				}
 			}
+
+			ServiceProvider.Instance.AddService(typeof(Grid<TCell>),this);
 		}
 
 		public void SetCell(TCell cell)
