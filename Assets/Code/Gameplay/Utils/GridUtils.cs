@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AnticTest.Gameplay.Utils
 {
-	public class GridUtils
+	public static class GridUtils
 	{
 		public static Coordinate ToCoordinate(Vector2Int vector2Int)
 		{
@@ -35,8 +35,7 @@ namespace AnticTest.Gameplay.Utils
 		public static Vector3 CoordinateToWorld(Coordinate coordinate)
 		{
 			GameMap gameMap = ServiceProvider.Instance.GetService(typeof(GameMap)) as GameMap;
-			Grid grid = ServiceProvider.Instance.GetService(typeof(Grid)) as Grid;
-			return grid.CellToWorld(ToVector3Int(coordinate)) + Vector3.up * gameMap.GetMapHeight();
+			return gameMap.GetGrid().CellToWorld(ToVector3Int(coordinate)) + Vector3.up * gameMap.GetMapHeight();
 		}
 	}
 }

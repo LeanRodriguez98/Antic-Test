@@ -22,5 +22,10 @@ namespace AnticTest.Gameplay.Map
 		{
 			return cellheight;
 		}
+
+		public Grid GetGrid() 
+		{
+			return gameGrid;
+		}
 	}
 }

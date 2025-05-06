@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AnticTest.Architecture.Utils
 {
-	public class CoordinateUtils
+	public static class CoordinateUtils
 	{
 		public static List<Coordinate> GetCoordinatesInRadius(Coordinate center, uint radius, bool includeCenter = true)
 		{
