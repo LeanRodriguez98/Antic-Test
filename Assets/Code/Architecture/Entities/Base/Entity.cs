@@ -7,29 +7,17 @@ namespace AnticTest.Architecture.Entities
 
 	public abstract class Entity
 	{
-		public static EntityEvent OnEntityCreated;
-		public static EntityEvent OnEntityDestroyed;
-
 		public Action OnThisEntityCreated;
 		public Action OnThisEntityDestroyed;
-
-		private static uint lastEntityID;
 
 		protected uint ID;
 		protected Coordinate coordinate;
 
-		protected Entity(Coordinate coordinate)
+		protected Entity(Coordinate coordinate, uint ID)
 		{
-			GenerateID();
 			this.coordinate = coordinate;
-			OnEntityCreated?.Invoke(this);
+			this.ID = ID;
 			OnThisEntityCreated?.Invoke();
-		}
-
-		protected void GenerateID()
-		{
-			ID = lastEntityID;
-			lastEntityID++;
 		}
 
 		public uint GetID()

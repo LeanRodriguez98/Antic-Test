@@ -1,4 +1,5 @@
 ﻿using AnticTest.Architecture.Entities;
+using AnticTest.Architecture.Entities.Factory;
 using AnticTest.Architecture.Map;
 using AnticTest.Architecture.Services;
 using AnticTest.Architecture.Utils;
@@ -14,23 +15,26 @@ namespace AnticTest.Architecture.GameLogic
 		private List<EnemyBug> enemies;
 		private Flag flag;
 
+		private EntityFactory entityFactory;
+
 		public GameLogic(Coordinate mapSize)
 		{
 			map = new Grid<Cell>(mapSize);
+			entityFactory = new EntityFactory();
 
 			Coordinate flagCoordinate = mapSize / 2;
-			flag = new Flag(flagCoordinate);
+			flag = entityFactory.CreateEntity<Flag>(flagCoordinate);
 
 			ants = new List<Ant>();
 			foreach (Coordinate coordinate in CoordinateUtils.GetCoordinatesInRadius(flagCoordinate, 2))
 			{
-				ants.Add(new Ant(coordinate));
+				ants.Add(entityFactory.CreateEntity<Ant>(coordinate));
 			}
 
 			enemies = new List<EnemyBug>();
 			for (int y = 0; y < mapSize.y; y++)
 			{
-				enemies.Add(new EnemyBug(new Coordinate(0, y)));
+				enemies.Add(entityFactory.CreateEntity<EnemyBug>(new Coordinate(0, y)));
 			}
 
 			ServiceProvider.Instance.AddService(typeof(GameLogic), this);

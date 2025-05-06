@@ -4,6 +4,6 @@ namespace AnticTest.Architecture.Entities
 {
 	public sealed class Flag : Entity
 	{
-		public Flag(Coordinate coordinate) : base(coordinate) { }
+		public Flag(Coordinate coordinate, uint ID) : base(coordinate, ID) { }
 	}
 }

@@ -4,7 +4,6 @@ namespace AnticTest.Architecture.Entities
 {
 	public sealed class Ant : MobileEntity
 	{
-		public Ant(Coordinate coordinate) : base(coordinate) { }
-
+		public Ant(Coordinate coordinate, uint ID) : base(coordinate, ID) { }
 	}
 }

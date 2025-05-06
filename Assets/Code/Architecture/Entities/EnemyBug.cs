@@ -4,6 +4,6 @@ namespace AnticTest.Architecture.Entities
 {
 	public sealed class EnemyBug : MobileEntity
 	{
-		public EnemyBug(Coordinate coordinate) : base(coordinate) { }
+		public EnemyBug(Coordinate coordinate, uint ID) : base(coordinate, ID) { }
 	}
 }

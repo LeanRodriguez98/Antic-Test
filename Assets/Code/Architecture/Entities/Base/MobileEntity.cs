@@ -7,7 +7,7 @@ namespace AnticTest.Architecture.Entities
 		public static EntityEvent OnEntityMoved;
 		public CoordinateEvent OnThisEntityMoved;
 
-		public MobileEntity(Coordinate coordinate) : base(coordinate) { }
+		public MobileEntity(Coordinate coordinate, uint ID) : base(coordinate, ID) { }
 
 		public override void SetCoordinate(Coordinate coordinate)
 		{
