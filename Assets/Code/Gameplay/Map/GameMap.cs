@@ -12,7 +12,7 @@ namespace AnticTest.Gameplay.Map
 	[RequireComponent(typeof(Grid))]
 	public class GameMap : MonoBehaviour, IService
 	{
-		private Grid<Cell> LogicalGrid => ServiceProvider.Instance.GetService(typeof(Grid<Cell>)) as Grid<Cell>;
+		private Grid<Cell> LogicalGrid => ServiceProvider.Instance.GetService<Grid<Cell>>();
 		private Grid gameGrid;
 
 		private Dictionary<Coordinate, GameObject> cellGameObjects;
@@ -23,7 +23,7 @@ namespace AnticTest.Gameplay.Map
 		{
 			gameGrid = GetComponent<Grid>();
 			CreateGameMap();
-			ServiceProvider.Instance.AddService(typeof(GameMap), this);
+			ServiceProvider.Instance.AddService<GameMap>(this);
 		}
 
 		public float GetCellHeight()
@@ -54,7 +54,7 @@ namespace AnticTest.Gameplay.Map
 
 			KeyValuePair<GameObject, int> GetPrefabFor(Cell cell)
 			{
-				IEnumerable<CellGameplayData> cellGameplayDatas = (ServiceProvider.Instance.GetService(typeof(DataBlackboard)) as DataBlackboard).GetGameplayDatas<CellGameplayData>();
+				IEnumerable<CellGameplayData> cellGameplayDatas = ServiceProvider.Instance.GetService<DataBlackboard>().GetGameplayDatas<CellGameplayData>();
 
 				if (cell.GetHeight() == CellHeight.Zero)
 					return new KeyValuePair<GameObject, int>(GetPrefabsFor(cell.GetCellType(), cell.GetHeight())[0], 0);

@@ -17,7 +17,7 @@ namespace AnticTest.Architecture.Entities.Factory
 		public EntityFactory()
 		{
 			LoadEntityConstructors();
-			ServiceProvider.Instance.AddService(typeof(EntityFactory), this);
+			ServiceProvider.Instance.AddService<EntityFactory>(this);
 		}
 
 		private void LoadEntityConstructors()

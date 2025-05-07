@@ -3,51 +3,55 @@ using System.Collections.Generic;
 
 namespace AnticTest.Architecture.Services
 {
-    public interface IService
-    {
+	public interface IService
+	{
 
-    }
+	}
 
-    public class ServiceProvider : IServiceProvider
-    {
-        private static ServiceProvider instance = null;
-		public static ServiceProvider Instance 
-        {
-            get
-            {
+	public class ServiceProvider : IServiceProvider
+	{
+		private static ServiceProvider instance = null;
+		public static ServiceProvider Instance
+		{
+			get
+			{
 				if (instance == null)
-                    instance = new ServiceProvider();
-                return instance;
-            } 
-            private set => instance = value;
-        }
+					instance = new ServiceProvider();
+				return instance;
+			}
+			private set => instance = value;
+		}
 
-        private readonly Dictionary<Type, IService> _services = new Dictionary<Type, IService>();
+		private readonly Dictionary<Type, IService> _services = new Dictionary<Type, IService>();
 
-        private ServiceProvider() { }
+		private ServiceProvider() { }
 
-		public void AddService(Type type, IService service)
-        {
-            if (!typeof(IService).IsAssignableFrom(type))
-                throw new InvalidCastException();
-            _services.Add(type, service);
-        }
+		public void AddService<ServiceType>(IService service) where ServiceType : class, IService
+		{
+			if (!_services.ContainsKey(typeof(ServiceType)))
+				_services.Add(typeof(ServiceType), service);
+		}
 
-        public bool RemoveService(Type type)
-        {
-            if (!typeof(IService).IsAssignableFrom(type))
-                throw new InvalidCastException();
-            return _services.Remove(type);
-        }
+		public bool RemoveService<ServiceType>() where ServiceType : class, IService
+		{
+			if (!_services.ContainsKey(typeof(ServiceType)))
+				throw new KeyNotFoundException();
+			return _services.Remove(typeof(ServiceType));
+		}
 
-        public object GetService(Type type)
-        {
-            if (!typeof(IService).IsAssignableFrom(type))
-                throw new InvalidCastException();
-            IService service;
-            _services.TryGetValue(type, out service);
-            return service;
-        }
-    }
+		public object GetService(Type type)
+		{
+			if (!typeof(IService).IsAssignableFrom(type))
+				throw new InvalidCastException();
+			IService service;
+			_services.TryGetValue(type, out service);
+			return service;
+		}
+
+		public ServiceType GetService<ServiceType>() where ServiceType : class, IService
+		{
+			return GetService(typeof(ServiceType)) as ServiceType;
+		}
+	}
 }
 

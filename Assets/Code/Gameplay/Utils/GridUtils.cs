@@ -34,7 +34,7 @@ namespace AnticTest.Gameplay.Utils
 
 		public static Vector3 CoordinateToWorld(Coordinate coordinate)
 		{
-			GameMap gameMap = ServiceProvider.Instance.GetService(typeof(GameMap)) as GameMap;
+			GameMap gameMap = ServiceProvider.Instance.GetService<GameMap>();
 			return gameMap.GetGrid().CellToWorld(ToVector3Int(coordinate)) + Vector3.up * gameMap.GetCellHeight();
 		}
 	}

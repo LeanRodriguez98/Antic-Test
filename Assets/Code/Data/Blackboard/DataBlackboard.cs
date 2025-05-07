@@ -18,7 +18,7 @@ namespace AnticTest.Data.Blackboard
 			architectureDatas = new Dictionary<Type, List<ScriptableObject>>();
 			gameplayDatas = new Dictionary<Type, List<ScriptableObject>>();
 			LoadData();
-			ServiceProvider.Instance.AddService(typeof(DataBlackboard), this);
+			ServiceProvider.Instance.AddService<DataBlackboard>(this);
 		}
 
 		private void LoadData()

@@ -51,7 +51,7 @@ namespace AnticTest.Architecture.Map
 				}
 			}
 
-			ServiceProvider.Instance.AddService(typeof(Grid<TCell>),this);
+			ServiceProvider.Instance.AddService<Grid<TCell>>(this);
 		}
 
 		public void SetCell(TCell cell)

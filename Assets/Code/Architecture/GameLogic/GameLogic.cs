@@ -37,7 +37,7 @@ namespace AnticTest.Architecture.GameLogic
 				enemies.Add(entityFactory.CreateEntity<EnemyBug>(new Coordinate(0, y)));
 			}
 
-			ServiceProvider.Instance.AddService(typeof(GameLogic), this);
+			ServiceProvider.Instance.AddService<GameLogic>(this);
 		}
 	}
 }
