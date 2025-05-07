@@ -1,10 +1,9 @@
-﻿using AnticTest.Architecture.Map;
-using AnticTest.Architecture.Services;
+﻿using AnticTest.DataModel.Map;
+using AnticTest.Services.Provider;
 using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.Data.Gameplay;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace AnticTest.Gameplay.Map
@@ -73,7 +72,7 @@ namespace AnticTest.Gameplay.Map
 								cell.GetHeight() <= (LogicalGrid[cell.GetNeighbors()[(j+5) % 6]]    != null ? LogicalGrid[cell.GetNeighbors()[(j+5) % 6]].GetHeight()   : cell.GetHeight() - 1)
 						};
 
-						if (Enumerable.SequenceEqual(current, CellGameplayData.Passability[i]))
+						if (current.SequenceEqual(CellGameplayData.Passability[i]))
 						{
 							return new KeyValuePair<GameObject, int>(GetPrefabsFor(cell.GetCellType(), cell.GetHeight())[i], j);
 						}

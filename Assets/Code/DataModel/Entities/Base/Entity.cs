@@ -1,7 +1,7 @@
-using AnticTest.Architecture.Map;
+using AnticTest.DataModel.Map;
 using System;
 
-namespace AnticTest.Architecture.Entities
+namespace AnticTest.DataModel.Entities
 {
 	public delegate void EntityEvent(Entity entity);
 

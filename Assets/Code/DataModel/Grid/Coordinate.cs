@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AnticTest.Architecture.Map
+namespace AnticTest.DataModel.Map
 {
     public delegate void CoordinateEvent(Coordinate coordinate);
 

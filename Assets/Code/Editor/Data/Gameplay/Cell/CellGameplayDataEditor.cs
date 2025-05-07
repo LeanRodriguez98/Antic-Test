@@ -1,4 +1,4 @@
-﻿using AnticTest.Architecture.Map;
+﻿using AnticTest.DataModel.Map;
 using AnticTest.Data.Architecture;
 using AnticTest.Data.Gameplay;
 using UnityEditor;

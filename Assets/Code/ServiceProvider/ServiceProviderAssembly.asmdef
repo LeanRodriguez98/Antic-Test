@@ -1,11 +1,7 @@
 {
-    "name": "ArchitectureAssembly",
-    "rootNamespace": "AnticTest.Architecture",
-    "references": [
-        "GUID:37f056404729b2c4abb253f37fcc178e",
-        "GUID:2fd3a0998708c7247acdce6048b14731",
-        "GUID:5880ced83b465364ebc1905df4ef4f98"
-    ],
+    "name": "ServiceProviderAssembly",
+    "rootNamespace": "",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

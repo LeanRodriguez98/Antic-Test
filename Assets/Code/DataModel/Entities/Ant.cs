@@ -1,6 +1,6 @@
-﻿using AnticTest.Architecture.Map;
+﻿using AnticTest.DataModel.Map;
 
-namespace AnticTest.Architecture.Entities
+namespace AnticTest.DataModel.Entities
 {
 	public sealed class Ant : MobileEntity
 	{

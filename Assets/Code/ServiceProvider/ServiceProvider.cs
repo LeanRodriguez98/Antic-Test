@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace AnticTest.Architecture.Services
+namespace AnticTest.Services.Provider
 {
-	public interface IService
-	{
-
-	}
-
 	public class ServiceProvider : IServiceProvider
 	{
 		private static ServiceProvider instance = null;

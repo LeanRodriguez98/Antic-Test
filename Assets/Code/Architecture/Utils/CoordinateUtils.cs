@@ -1,4 +1,4 @@
-﻿using AnticTest.Architecture.Map;
+﻿using AnticTest.DataModel.Map;
 using System;
 using System.Collections.Generic;
 

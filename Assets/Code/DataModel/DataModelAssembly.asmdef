@@ -1,10 +1,8 @@
 {
-    "name": "DataAssembly",
-    "rootNamespace": "AnticTest.Data",
+    "name": "DataModelAssembly",
+    "rootNamespace": "",
     "references": [
-        "GUID:2fd3a0998708c7247acdce6048b14731",
-        "GUID:5880ced83b465364ebc1905df4ef4f98",
-        "GUID:c351a1786724f9a4a82ee31c9b5e0294"
+        "GUID:5880ced83b465364ebc1905df4ef4f98"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -14,5 +12,5 @@
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
-    "noEngineReferences": false
+    "noEngineReferences": true
 }

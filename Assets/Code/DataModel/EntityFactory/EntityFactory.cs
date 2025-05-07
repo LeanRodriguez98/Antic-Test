@@ -1,10 +1,10 @@
-﻿using AnticTest.Architecture.Map;
-using AnticTest.Architecture.Services;
+﻿using AnticTest.DataModel.Map;
+using AnticTest.Services.Provider;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace AnticTest.Architecture.Entities.Factory
+namespace AnticTest.DataModel.Entities.Factory
 {
 	public sealed class EntityFactory : IService
 	{
@@ -17,7 +17,6 @@ namespace AnticTest.Architecture.Entities.Factory
 		public EntityFactory()
 		{
 			LoadEntityConstructors();
-			ServiceProvider.Instance.AddService<EntityFactory>(this);
 		}
 
 		private void LoadEntityConstructors()

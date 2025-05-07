@@ -1,5 +1,5 @@
-﻿using AnticTest.Architecture.Map;
-using AnticTest.Architecture.Services;
+﻿using AnticTest.DataModel.Map;
+using AnticTest.Services.Provider;
 using AnticTest.Gameplay.Map;
 using UnityEngine;
 

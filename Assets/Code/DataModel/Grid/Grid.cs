@@ -1,6 +1,6 @@
-using AnticTest.Architecture.Services;
+using AnticTest.Services.Provider;
 
-namespace AnticTest.Architecture.Map
+namespace AnticTest.DataModel.Map
 {
 	public class Grid<TCell> : IService
 		where TCell : class, ICell, new()
@@ -51,7 +51,6 @@ namespace AnticTest.Architecture.Map
 				}
 			}
 
-			ServiceProvider.Instance.AddService<Grid<TCell>>(this);
 		}
 
 		public void SetCell(TCell cell)

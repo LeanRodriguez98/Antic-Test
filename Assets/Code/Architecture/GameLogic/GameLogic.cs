@@ -1,7 +1,7 @@
-﻿using AnticTest.Architecture.Entities;
-using AnticTest.Architecture.Entities.Factory;
-using AnticTest.Architecture.Map;
-using AnticTest.Architecture.Services;
+﻿using AnticTest.DataModel.Entities;
+using AnticTest.DataModel.Entities.Factory;
+using AnticTest.DataModel.Map;
+using AnticTest.Services.Provider;
 using AnticTest.Architecture.Utils;
 using System.Collections.Generic;
 
@@ -20,7 +20,9 @@ namespace AnticTest.Architecture.GameLogic
 		public GameLogic(Coordinate mapSize)
 		{
 			map = new Grid<Cell>(mapSize);
+			ServiceProvider.Instance.AddService<Grid<Cell>>(map);
 			entityFactory = new EntityFactory();
+			ServiceProvider.Instance.AddService<EntityFactory>(entityFactory);
 
 			Coordinate flagCoordinate = mapSize / 2;
 			flag = entityFactory.CreateEntity<Flag>(flagCoordinate);
