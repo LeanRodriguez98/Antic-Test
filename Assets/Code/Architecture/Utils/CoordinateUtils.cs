@@ -8,37 +8,37 @@ namespace AnticTest.Architecture.Utils
 	{
 		public static List<Coordinate> GetCoordinatesInRadius(Coordinate center, uint radius, bool includeCenter = true)
 		{
-			List<Coordinate> tilesInRadius = new List<Coordinate>();
-			tilesInRadius.Add(center);
+			List<Coordinate> cellInRadius = new List<Coordinate>();
+			cellInRadius.Add(center);
 
 			if (radius == 0)
-				return tilesInRadius;
+				return cellInRadius;
 
-			Coordinate Last() => tilesInRadius[tilesInRadius.Count - 1];
+			Coordinate Last() => cellInRadius[cellInRadius.Count - 1];
 			Coordinate startRing = Last();
 
 			for (int i = 1; i <= radius; i++)
 			{
-				tilesInRadius.Add(new Coordinate(startRing.y % 2 == 0 ? startRing.x - 1 : startRing.x, startRing.y + 1));
+				cellInRadius.Add(new Coordinate(startRing.y % 2 == 0 ? startRing.x - 1 : startRing.x, startRing.y + 1));
 				startRing = Last();
 				for (int j = 1; j <= i; j++)
-					tilesInRadius.Add(new Coordinate(Last().x + 1, Last().y));
+					cellInRadius.Add(new Coordinate(Last().x + 1, Last().y));
 				for (int j = 1; j <= i; j++)
-					tilesInRadius.Add(new Coordinate(Last().y % 2 == 0 ? Last().x : Last().x + 1, Last().y - 1));
+					cellInRadius.Add(new Coordinate(Last().y % 2 == 0 ? Last().x : Last().x + 1, Last().y - 1));
 				for (int j = 1; j <= i; j++)
-					tilesInRadius.Add(new Coordinate(Last().y % 2 == 0 ? Last().x - 1 : Last().x, Last().y - 1));
+					cellInRadius.Add(new Coordinate(Last().y % 2 == 0 ? Last().x - 1 : Last().x, Last().y - 1));
 				for (int j = 1; j <= i; j++)
-					tilesInRadius.Add(new Coordinate(Last().x - 1, Last().y));
+					cellInRadius.Add(new Coordinate(Last().x - 1, Last().y));
 				for (int j = 1; j <= i; j++)
-					tilesInRadius.Add(new Coordinate(Last().y % 2 == 0 ? Last().x - 1 : Last().x, Last().y + 1));
+					cellInRadius.Add(new Coordinate(Last().y % 2 == 0 ? Last().x - 1 : Last().x, Last().y + 1));
 				for (int j = 1; j < i; j++)
-					tilesInRadius.Add(new Coordinate(Last().y % 2 == 0 ? Last().x : Last().x + 1, Last().y + 1));
+					cellInRadius.Add(new Coordinate(Last().y % 2 == 0 ? Last().x : Last().x + 1, Last().y + 1));
 			}
 
 			if (!includeCenter)
-				tilesInRadius.RemoveAt(0);
+				cellInRadius.RemoveAt(0);
 
-			return tilesInRadius;
+			return cellInRadius;
 		}
 
 		public static uint Distance(Coordinate a, Coordinate b)

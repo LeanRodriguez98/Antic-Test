@@ -1,20 +1,20 @@
 namespace AnticTest.Architecture.Map
 {
-	public delegate void CellEvent(ICell tile);
+	public delegate void CellEvent(ICell cell);
 
 	public enum CellType
 	{
 		UNDEFINED = -1,
-		Sea = 0,
+		Water = 0,
 		Grass = 1,
+		Mountain = 2
 	}
 
 	public enum CellHeight
 	{
-		UNDEFINED = -1,
+		Zero = 0,
 		One = 1,
 		Two = 2,
-		Three = 3
 	}
 
 	public interface ICell
@@ -31,7 +31,7 @@ namespace AnticTest.Architecture.Map
 		private Coordinate coordinate;
 		private Coordinate[] neighbors = new Coordinate[6];
 		private CellType type = CellType.UNDEFINED;
-		private CellHeight height = CellHeight.One;
+		private CellHeight height = CellHeight.Zero;
 
 		public Coordinate RightNeighbor => neighbors[0];
 		public Coordinate RightDownNeighbor => neighbors[1];

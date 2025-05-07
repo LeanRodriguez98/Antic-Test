@@ -2,7 +2,8 @@
     "name": "GameplayAssembly",
     "rootNamespace": "AnticTest.Gameplay",
     "references": [
-        "GUID:417f2448c4e586943a0e774ffbe4a2af"
+        "GUID:417f2448c4e586943a0e774ffbe4a2af",
+        "GUID:37f056404729b2c4abb253f37fcc178e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

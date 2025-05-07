@@ -1,0 +1,18 @@
+{
+    "name": "EditorAssembly",
+    "rootNamespace": "AnticTest.Editor",
+    "references": [
+        "GUID:417f2448c4e586943a0e774ffbe4a2af",
+        "GUID:37f056404729b2c4abb253f37fcc178e",
+        "GUID:8237ef43523ebbf49ac77d98e0bfb18a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

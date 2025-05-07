@@ -20,12 +20,33 @@ namespace AnticTest.Architecture.Map
 			OnCellSelected += SetSelectedCoordinate;
 			map = new TCell[size.x, size.y];
 
+			System.Random random = new System.Random();
+
 			for (int x = 0; x < size.x; x++)
 			{
 				for (int y = 0; y < size.y; y++)
 				{
 					TCell newCell = new TCell();
-					newCell.Init(new Coordinate(x, y), CellType.Grass, CellHeight.One);
+					
+					//Random testing map, delete
+					CellType randomType = (CellType)random.Next((int)CellType.Water, (int)CellType.Mountain + 1);
+					CellHeight cellHeight = CellHeight.One;
+					switch (randomType)
+					{
+						case CellType.Water:
+							cellHeight = CellHeight.Zero;
+							break;
+						case CellType.Grass:
+							cellHeight = (CellHeight)random.Next((int)CellHeight.Zero, (int)CellHeight.One + 1);
+							break;
+						case CellType.Mountain:
+							cellHeight = CellHeight.Two;
+							break;
+						default:
+							break;
+					}
+
+					newCell.Init(new Coordinate(x, y), randomType, cellHeight);
 					SetCell(newCell);
 				}
 			}

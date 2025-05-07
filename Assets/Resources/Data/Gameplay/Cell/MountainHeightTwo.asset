@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a77292125ccd845a9ddb4e64e07d49, type: 3}
+  m_Name: MountainHeightTwo
+  m_EditorClassIdentifier: 
+  architectureData: {fileID: 11400000, guid: d2137aabd6fc6b243b317300ebb9f44f, type: 2}
+  prefafs:
+  - {fileID: 3047197050753802198, guid: 60ed6f0a16409be4d98e7f05b4248672, type: 3}
+  - {fileID: 3981932814076812562, guid: e209d64cb19930c458e754bc92065c20, type: 3}
+  - {fileID: 5589574080341648137, guid: 6baf0491fa6953d4690584471a524750, type: 3}
+  - {fileID: 3639128530208517879, guid: 657b47756e511f541a21b11398b4a1a3, type: 3}
+  - {fileID: 7324156929970054458, guid: 8f21a0cd46cf04c488b2abdc93ef5201, type: 3}
+  - {fileID: 3020013414920038989, guid: c4da35e54c444164d95eabfd9406ac1a, type: 3}
+  - {fileID: 3106414264886502555, guid: 5135e46797283f4499bafb27656bf496, type: 3}
+  - {fileID: 7306297151171078303, guid: cfe90efb899eccc459ae338d79d2ef8f, type: 3}
+  - {fileID: 6577356586484540204, guid: 4f0110c98a3fdb84ab2db5c43c6673c1, type: 3}
+  - {fileID: 1898188263817965614, guid: ae63dae162fec8440a55c67e3c80918e, type: 3}
+  - {fileID: 623380059001885287, guid: bae97c3a61630d54592e3b8b579a1b1d, type: 3}
+  - {fileID: 7179894989193979394, guid: 9ba0d7ef17d6d1945b44bd1dadda0cc9, type: 3}
+  - {fileID: 4149656295096820585, guid: 8ca2de431a559f34d87d08feae14c64f, type: 3}
+  - {fileID: 2268704166844425429, guid: 7d64b161605f37e49bbe780f1f84e0a7, type: 3}
