@@ -1,17 +1,17 @@
-﻿using AnticTest.DataModel.Map;
-using AnticTest.Services.Provider;
+﻿using AnticTest.Architecture.GameLogic;
 using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.Data.Gameplay;
+using AnticTest.DataModel.Map;
+using AnticTest.Services.Provider;
 using System.Collections.Generic;
 using UnityEngine;
-
 namespace AnticTest.Gameplay.Map
 {
 	[RequireComponent(typeof(Grid))]
 	public class GameMap : MonoBehaviour, IService
 	{
-		private Grid<Cell> LogicalGrid => ServiceProvider.Instance.GetService<Grid<Cell>>();
+		private Map<Cell> LogicalMap => ServiceProvider.Instance.GetService<Map<Cell>>();
 		private Grid gameGrid;
 		private GameObject cellsContainer;
 
@@ -41,15 +41,16 @@ namespace AnticTest.Gameplay.Map
 		private void CreateGameMap()
 		{
 			cellGameObjects = new Dictionary<Coordinate, GameObject>();
-			Coordinate mapSize = LogicalGrid.GetSize();
-			for (int x = 0; x < mapSize.x; x++)
+			Coordinate mapSize = LogicalMap.Size;
+			for (int y = 0; y < mapSize.y; y++)
 			{
-				for (int y = 0; y < mapSize.y; y++)
+				for (int x = 0; x < mapSize.x; x++)
 				{
-					Cell cell = LogicalGrid[new Coordinate(x, y)];
+					Cell cell = LogicalMap[new Coordinate(x, y)];
 					KeyValuePair<GameObject, int> prefab = GetPrefabFor(cell);
 					GameObject newCell = Instantiate(prefab.Key, gameGrid.CellToWorld(new Vector3Int(x, y, 0)),
 						prefab.Key.transform.rotation * Quaternion.Euler(0, 60.0f * prefab.Value, 0.0f), cellsContainer.transform);
+					newCell.name = cell.GetCoordinate().ToString();
 					newCell.isStatic = true;
 				}
 			}
@@ -67,12 +68,12 @@ namespace AnticTest.Gameplay.Map
 					{
 						bool[] current = new bool[]
 						{
-								cell.GetHeight() <= (LogicalGrid[cell.GetNeighbors()[j % 6]]        != null ? LogicalGrid[cell.GetNeighbors()[j % 6]].GetHeight()       : cell.GetHeight() - 1),
-								cell.GetHeight() <= (LogicalGrid[cell.GetNeighbors()[(j+1) % 6]]    != null ? LogicalGrid[cell.GetNeighbors()[(j+1) % 6]].GetHeight()   : cell.GetHeight() - 1),
-								cell.GetHeight() <= (LogicalGrid[cell.GetNeighbors()[(j+2) % 6]]    != null ? LogicalGrid[cell.GetNeighbors()[(j+2) % 6]].GetHeight()   : cell.GetHeight() - 1),
-								cell.GetHeight() <= (LogicalGrid[cell.GetNeighbors()[(j+3) % 6]]    != null ? LogicalGrid[cell.GetNeighbors()[(j+3) % 6]].GetHeight()   : cell.GetHeight() - 1),
-								cell.GetHeight() <= (LogicalGrid[cell.GetNeighbors()[(j+4) % 6]]    != null ? LogicalGrid[cell.GetNeighbors()[(j+4) % 6]].GetHeight()   : cell.GetHeight() - 1),
-								cell.GetHeight() <= (LogicalGrid[cell.GetNeighbors()[(j+5) % 6]]    != null ? LogicalGrid[cell.GetNeighbors()[(j+5) % 6]].GetHeight()   : cell.GetHeight() - 1)
+								cell.GetHeight() <= (LogicalMap[cell.GetNeighbors()[j % 6]]        != null ? LogicalMap[cell.GetNeighbors()[j % 6]].GetHeight()       : cell.GetHeight() - 1),
+								cell.GetHeight() <= (LogicalMap[cell.GetNeighbors()[(j+1) % 6]]    != null ? LogicalMap[cell.GetNeighbors()[(j+1) % 6]].GetHeight()   : cell.GetHeight() - 1),
+								cell.GetHeight() <= (LogicalMap[cell.GetNeighbors()[(j+2) % 6]]    != null ? LogicalMap[cell.GetNeighbors()[(j+2) % 6]].GetHeight()   : cell.GetHeight() - 1),
+								cell.GetHeight() <= (LogicalMap[cell.GetNeighbors()[(j+3) % 6]]    != null ? LogicalMap[cell.GetNeighbors()[(j+3) % 6]].GetHeight()   : cell.GetHeight() - 1),
+								cell.GetHeight() <= (LogicalMap[cell.GetNeighbors()[(j+4) % 6]]    != null ? LogicalMap[cell.GetNeighbors()[(j+4) % 6]].GetHeight()   : cell.GetHeight() - 1),
+								cell.GetHeight() <= (LogicalMap[cell.GetNeighbors()[(j+5) % 6]]    != null ? LogicalMap[cell.GetNeighbors()[(j+5) % 6]].GetHeight()   : cell.GetHeight() - 1)
 						};
 
 						if (current.SequenceEqual(CellGameplayData.Passability[i]))

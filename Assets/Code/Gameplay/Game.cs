@@ -4,6 +4,7 @@ using AnticTest.Data.Blackboard;
 using UnityEngine;
 using AnticTest.Gameplay.Map;
 using AnticTest.Gameplay.Entities.Factory;
+using AnticTest.Data.Architecture;
 
 namespace AnticTest.Gameplay.Game
 {
@@ -16,13 +17,13 @@ namespace AnticTest.Gameplay.Game
 
 		private GameLogic gameLogic;
 		private DataBlackboard dataBlackboard;
-		[SerializeField] private int SizeX = 30;
-		[SerializeField] private int SizeY = 30;
+
+		[SerializeField] private MapArchitectureData levelToLoad;
 
 		private void Awake()
 		{
 			dataBlackboard = new DataBlackboard();
-			gameLogic = new GameLogic(new Coordinate(SizeX, SizeY));
+			gameLogic = new GameLogic(levelToLoad);
 			gameEntityFactory = GetComponent<GameEntityFactory>();
 			gameEntityFactory.Init();
 			gameMap = GetComponent<GameMap>();

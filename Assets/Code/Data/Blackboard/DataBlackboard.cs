@@ -75,6 +75,7 @@ namespace AnticTest.Data.Blackboard
 			}
 		}
 
+
 		public DataType GetArchitectureData<DataType>(string name) where DataType : ArchitectureData
 		{
 			if (architectureDatas.ContainsKey(typeof(DataType)))
