@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62303a7c6e6b8754287b5ef3b2724a9b, type: 3}
+  m_Name: Beetle
+  m_EditorClassIdentifier: 
+  architectureData: {fileID: 11400000, guid: 8290746111788c04c8a58f66121b1b61, type: 2}
+  prefab: {fileID: 6263812090077126972, guid: cac2957c449d2914d8099b38f1681cea, type: 3}

@@ -3,7 +3,10 @@
     "rootNamespace": "AnticTest.Gameplay",
     "references": [
         "GUID:417f2448c4e586943a0e774ffbe4a2af",
-        "GUID:37f056404729b2c4abb253f37fcc178e"
+        "GUID:37f056404729b2c4abb253f37fcc178e",
+        "GUID:2fd3a0998708c7247acdce6048b14731",
+        "GUID:5880ced83b465364ebc1905df4ef4f98",
+        "GUID:c351a1786724f9a4a82ee31c9b5e0294"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -13,14 +13,17 @@ namespace AnticTest.Gameplay.Map
 	{
 		private Grid<Cell> LogicalGrid => ServiceProvider.Instance.GetService<Grid<Cell>>();
 		private Grid gameGrid;
+		private GameObject cellsContainer;
 
 		private Dictionary<Coordinate, GameObject> cellGameObjects;
 
 		[SerializeField] private float cellHeight;
 
-		private void Start()
+		public void Init()
 		{
 			gameGrid = GetComponent<Grid>();
+			cellsContainer = new GameObject("CellsContainer");
+			cellsContainer.transform.parent = transform;
 			CreateGameMap();
 			ServiceProvider.Instance.AddService<GameMap>(this);
 		}
@@ -46,7 +49,7 @@ namespace AnticTest.Gameplay.Map
 					Cell cell = LogicalGrid[new Coordinate(x, y)];
 					KeyValuePair<GameObject, int> prefab = GetPrefabFor(cell);
 					GameObject newCell = Instantiate(prefab.Key, gameGrid.CellToWorld(new Vector3Int(x, y, 0)),
-						prefab.Key.transform.rotation * Quaternion.Euler(0, 60.0f * prefab.Value, 0.0f), transform);
+						prefab.Key.transform.rotation * Quaternion.Euler(0, 60.0f * prefab.Value, 0.0f), cellsContainer.transform);
 					newCell.isStatic = true;
 				}
 			}

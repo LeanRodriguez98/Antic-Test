@@ -1,14 +1,20 @@
-﻿using AnticTest.DataModel.Map;
+﻿using AnticTest.Data.Architecture;
+using AnticTest.DataModel.Entities;
+using AnticTest.DataModel.Map;
 using AnticTest.Services.Provider;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace AnticTest.DataModel.Entities.Factory
+namespace AnticTest.Data.Entities.Factory
 {
+	public delegate void EntityFactoryEvent(ArchitectureData entityArchitectureData, Entity entity);
+
 	public sealed class EntityFactory : IService
 	{
-		public EntityEvent OnEntityCreated;
+		private const string DATA_MODEL_ASSEMBLY_NAME = "DataModelAssembly";
+
+		public EntityFactoryEvent OnEntityCreated;
 		public EntityEvent OnEntityDestroyed;
 		private uint lastEntityID;
 
@@ -22,7 +28,7 @@ namespace AnticTest.DataModel.Entities.Factory
 		private void LoadEntityConstructors()
 		{
 			entityConstructors = new Dictionary<Type, ConstructorInfo>();
-			foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+			foreach (Type type in Assembly.Load(new AssemblyName(DATA_MODEL_ASSEMBLY_NAME)).GetTypes())
 			{
 				if (type.IsClass && !type.IsAbstract &&
 					typeof(Entity).IsAssignableFrom(type) && type != typeof(Entity))
@@ -41,7 +47,7 @@ namespace AnticTest.DataModel.Entities.Factory
 			}
 		}
 
-		public EntityType CreateEntity<EntityType>(Coordinate coordinate) where EntityType : Entity
+		public EntityType CreateEntity<EntityType>(EntityArchitectureData<EntityType> architectureData, Coordinate coordinate) where EntityType : Entity
 		{
 			EntityType newEntity = null;
 			if (entityConstructors.ContainsKey(typeof(EntityType)))
@@ -49,7 +55,7 @@ namespace AnticTest.DataModel.Entities.Factory
 				newEntity = entityConstructors[typeof(EntityType)].
 					Invoke(new object[] { coordinate, lastEntityID }) as EntityType;
 				lastEntityID++;
-				OnEntityCreated?.Invoke(newEntity);
+				OnEntityCreated?.Invoke(architectureData, newEntity);
 			}
 			return newEntity;
 		}
