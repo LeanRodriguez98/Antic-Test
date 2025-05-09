@@ -1,6 +1,7 @@
-﻿using AnticTest.DataModel.Map;
-using AnticTest.Services.Provider;
+﻿using AnticTest.Architecture.GameLogic;
+using AnticTest.DataModel.Grid;
 using AnticTest.Gameplay.Map;
+using AnticTest.Services.Provider;
 using UnityEngine;
 
 namespace AnticTest.Gameplay.Utils
@@ -19,12 +20,12 @@ namespace AnticTest.Gameplay.Utils
 
 		public static Vector2Int ToVector2Int(Coordinate coordinate)
 		{
-			return new Vector2Int(coordinate.x, coordinate.y);
+			return new Vector2Int(coordinate.X, coordinate.Y);
 		}
 
 		public static Vector3Int ToVector3Int(Coordinate coordinate)
 		{
-			return new Vector3Int(coordinate.x, coordinate.y);
+			return new Vector3Int(coordinate.X, coordinate.Y);
 		}
 
 		public static Vector3Int ToVector3Int(Vector2Int vector2Int)
@@ -35,8 +36,8 @@ namespace AnticTest.Gameplay.Utils
 		public static Vector3 CoordinateToWorld(Coordinate coordinate)
 		{
 			GameMap gameMap = ServiceProvider.Instance.GetService<GameMap>();
-			Architecture.GameLogic.Map<Cell> logicalMap = ServiceProvider.Instance.GetService<Architecture.GameLogic.Map<Cell>>();
-			return gameMap.GetGrid().CellToWorld(ToVector3Int(coordinate)) + 
+			Map<Cell<Coordinate>, Coordinate> logicalMap = ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
+			return gameMap.GetGrid().CellToWorld(ToVector3Int(coordinate)) +
 				Vector3.up * gameMap.GetCellHeight() * (float)logicalMap.GetCell(coordinate).GetHeight();
 		}
 	}

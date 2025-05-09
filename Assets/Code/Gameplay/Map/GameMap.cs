@@ -2,7 +2,7 @@
 using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.Data.Gameplay;
-using AnticTest.DataModel.Map;
+using AnticTest.DataModel.Grid;
 using AnticTest.Services.Provider;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +11,7 @@ namespace AnticTest.Gameplay.Map
 	[RequireComponent(typeof(Grid))]
 	public class GameMap : MonoBehaviour, IService
 	{
-		private Map<Cell> LogicalMap => ServiceProvider.Instance.GetService<Map<Cell>>();
+		private Map<Cell<Coordinate>, Coordinate> LogicalMap => ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
 		private Grid gameGrid;
 		private GameObject cellsContainer;
 
@@ -41,12 +41,12 @@ namespace AnticTest.Gameplay.Map
 		private void CreateGameMap()
 		{
 			cellGameObjects = new Dictionary<Coordinate, GameObject>();
-			Coordinate mapSize = LogicalMap.Size;
+			(int x, int y) mapSize = LogicalMap.Size;
 			for (int y = 0; y < mapSize.y; y++)
 			{
 				for (int x = 0; x < mapSize.x; x++)
 				{
-					Cell cell = LogicalMap[new Coordinate(x, y)];
+					Cell<Coordinate> cell = LogicalMap[new Coordinate(x, y)];
 					KeyValuePair<GameObject, int> prefab = GetPrefabFor(cell);
 					GameObject newCell = Instantiate(prefab.Key, gameGrid.CellToWorld(new Vector3Int(x, y, 0)),
 						prefab.Key.transform.rotation * Quaternion.Euler(0, 60.0f * prefab.Value, 0.0f), cellsContainer.transform);
@@ -55,7 +55,7 @@ namespace AnticTest.Gameplay.Map
 				}
 			}
 
-			KeyValuePair<GameObject, int> GetPrefabFor(Cell cell)
+			KeyValuePair<GameObject, int> GetPrefabFor(Cell<Coordinate> cell)
 			{
 				IEnumerable<CellGameplayData> cellGameplayDatas = ServiceProvider.Instance.GetService<DataBlackboard>().GetGameplayDatas<CellGameplayData>();
 

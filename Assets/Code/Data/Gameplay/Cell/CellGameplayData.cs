@@ -1,10 +1,10 @@
-using AnticTest.DataModel.Map;
+using AnticTest.DataModel.Grid;
 using UnityEngine;
 
 namespace AnticTest.Data.Gameplay
 {
 	[CreateAssetMenu(fileName = "New Cell Gameplay Data", menuName = "AnticTest/Data/Gameplay/Cell")]
-	public sealed class CellGameplayData : GameplayData<Cell>
+	public sealed class CellGameplayData : GameplayData<Cell<Coordinate>>
 	{
 		public GameObject[] prefafs = new GameObject[14];
 

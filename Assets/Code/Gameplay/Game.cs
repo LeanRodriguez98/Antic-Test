@@ -1,5 +1,5 @@
 using AnticTest.Architecture.GameLogic;
-using AnticTest.DataModel.Map;
+using AnticTest.DataModel.Grid;
 using AnticTest.Data.Blackboard;
 using UnityEngine;
 using AnticTest.Gameplay.Map;

@@ -52,7 +52,7 @@ namespace AnticTest.Data.Blackboard
 			{
 				foreach (GameplayData gameplayData in gameplayDatasList)
 				{
-					if (gameplayData.GetType().InheritsFromRawGeneric(typeof(EntityGameplayData<>)))
+					if (gameplayData.GetType().InheritsFromRawGeneric(typeof(EntityGameplayData<,,>)))
 					{
 						Type dataType = gameplayData.GetType();
 

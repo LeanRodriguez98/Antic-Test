@@ -1,44 +1,52 @@
-namespace AnticTest.DataModel.Map
+using System.Collections.Generic;
+
+namespace AnticTest.DataModel.Grid
 {
-	public class Grid<TCell>
-		where TCell : class, ICell, new()
+	public class Grid<TCell, TCoordinate>
+		where TCell : class, ICell<TCoordinate>, new()
+		where TCoordinate : struct, ICoordinate
 	{
-		private TCell[,] map;
+		private GridMatrix<TCell> map;
 
-		private Coordinate selectedCoordinate;
+		private TCoordinate selectedCoordinate;
 
-		public Coordinate SelectedCoordinate { get => selectedCoordinate; }
+		public TCoordinate SelectedCoordinate { get => selectedCoordinate; }
 
-		public CellEvent OnCellSelected;
-		public CellEvent OnCellDeselected;
-		public CellEvent OnCellHover;
+		public CellEvent<TCoordinate> OnCellSelected;
+		public CellEvent<TCoordinate> OnCellDeselected;
+		public CellEvent<TCoordinate> OnCellHover;
 
-		public Grid(Coordinate size)
+		public Grid(int sizeX, int sizeY)
 		{
 			OnCellSelected += SetSelectedCoordinate;
-			map = new TCell[size.x, size.y];
+			map = new GridMatrix<TCell>(sizeX, sizeY, null);
 		}
 
 		public void SetCell(TCell cell)
 		{
-			map[cell.GetCoordinate().x, cell.GetCoordinate().y] = cell;
+			map.Set(cell.GetCoordinate().X, cell.GetCoordinate().Y, cell);
 		}
 
-		public TCell this[Coordinate coordinate] { get { return GetCell(coordinate); } }
+		public TCell this[TCoordinate coordinate] { get { return GetCell(coordinate); } }
 
-		public TCell GetCell(Coordinate coordinate)
+		public TCell GetCell(TCoordinate coordinate)
 		{
-			if (coordinate.x < 0 || coordinate.x >= map.GetLength(0) || coordinate.y < 0 || coordinate.y >= map.GetLength(1))
+			if (!map.IsValid(coordinate.GetCoordinate().x, coordinate.GetCoordinate().y))
 				return null;
-			return map[coordinate.x, coordinate.y];
+			return map[coordinate.GetCoordinate().x, coordinate.GetCoordinate().y];
 		}
 
-		public Coordinate GetSize()
+		public (int x, int y) GetSize()
 		{
-			return new Coordinate(map.GetLength(0), map.GetLength(1));
+			return map.Lenght;
 		}
 
-		private void SetSelectedCoordinate(ICell cell)
+		public IEnumerable<TCell> GetGraph()
+		{
+			return map;
+		}
+
+		private void SetSelectedCoordinate(ICell<TCoordinate> cell)
 		{
 			selectedCoordinate = cell.GetCoordinate();
 		}

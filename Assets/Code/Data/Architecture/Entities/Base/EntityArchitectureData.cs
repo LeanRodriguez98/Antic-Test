@@ -1,10 +1,14 @@
 ﻿using AnticTest.DataModel.Entities;
-using AnticTest.DataModel.Map;
+using AnticTest.DataModel.Grid;
 
 namespace AnticTest.Data.Architecture
 {
-	public abstract class EntityArchitectureData<EntityType> : ArchitectureData<EntityType> where EntityType : Entity
+	public abstract class EntityArchitectureData<TEntity, TCell, TCoordinate> : ArchitectureData<TEntity>
+		where TEntity : Entity<TCell, TCoordinate>
+		where TCell : class, ICell<TCoordinate>, new()
+		where TCoordinate : struct, ICoordinate
 	{
-		public abstract EntityType Get(Coordinate coord);
+		public abstract TEntity Get(TCoordinate coord);
+		public abstract object[] GetParameters();
 	}
 }

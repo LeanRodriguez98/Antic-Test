@@ -1,7 +1,5 @@
-namespace AnticTest.DataModel.Map
+namespace AnticTest.DataModel.Grid
 {
-	public delegate void CellEvent(ICell cell);
-
 	public enum CellType
 	{
 		UNDEFINED = -1,
@@ -17,49 +15,58 @@ namespace AnticTest.DataModel.Map
 		Two = 2,
 	}
 
-	public interface ICell
-	{
-		public void Init(Coordinate coord, CellType type, CellHeight height);
-		public void SetCoordinate(Coordinate coord);
-		public void SetType(CellType type);
-		public void SetHeight(CellHeight height);
-		public Coordinate GetCoordinate();
-	}
+	public delegate void CellEvent<TCoordinate>(ICell<TCoordinate> cell) 
+		where TCoordinate : struct, ICoordinate;
 
-	public class Cell : ICell
+	public class Cell<TCoordinate> : ICell<TCoordinate>
+		where TCoordinate : struct, ICoordinate
 	{
-		private Coordinate coordinate;
-		private Coordinate[] neighbors = new Coordinate[6];
+		private TCoordinate coordinate;
+		private TCoordinate[] neighbors = new TCoordinate[6];
 		private CellType type = CellType.UNDEFINED;
 		private CellHeight height = CellHeight.Zero;
 
-		public Coordinate RightNeighbor => neighbors[0];
-		public Coordinate RightDownNeighbor => neighbors[1];
-		public Coordinate LeftDownNeighbor => neighbors[2];
-		public Coordinate LeftNeighbor => neighbors[3];
-		public Coordinate LeftUpNeighbor => neighbors[4];
-		public Coordinate RightUpNeighbor => neighbors[5];
+		public TCoordinate RightNeighbor => neighbors[0];
+		public TCoordinate RightDownNeighbor => neighbors[1];
+		public TCoordinate LeftDownNeighbor => neighbors[2];
+		public TCoordinate LeftNeighbor => neighbors[3];
+		public TCoordinate LeftUpNeighbor => neighbors[4];
+		public TCoordinate RightUpNeighbor => neighbors[5];
+
+		public TCoordinate InvalidCoordinate
+		{
+			get
+			{
+				TCoordinate invalidCoordinate = new TCoordinate();
+				invalidCoordinate.Set(int.MinValue, int.MinValue);
+				return invalidCoordinate;
+			}
+		}
 
 		public Cell()
 		{
+			for (int i = 0; i < neighbors.Length; i++)
+			{
+				neighbors[i] = InvalidCoordinate;
+			}
 		}
 
-		public void Init(Coordinate coord, CellType type, CellHeight height)
+		public void Init(TCoordinate coordinate, CellType type, CellHeight height)
 		{
-			SetCoordinate(coord);
+			SetCoordinate(coordinate);
 			SetType(type);
 			SetHeight(height);
 		}
 
-		public void SetCoordinate(Coordinate coord)
+		public void SetCoordinate(TCoordinate coordinate)
 		{
-			coordinate = new Coordinate(coord.x, coord.y);
-			neighbors[0] = new Coordinate(coord.x + 1, coord.y);
-			neighbors[1] = new Coordinate(coord.y % 2 == 0 ? coord.x : coord.x + 1, coord.y - 1);
-			neighbors[2] = new Coordinate(coord.y % 2 == 0 ? coord.x - 1 : coord.x, coord.y - 1);
-			neighbors[3] = new Coordinate(coord.x - 1, coord.y);
-			neighbors[4] = new Coordinate(coord.y % 2 == 0 ? coord.x - 1 : coord.x, coord.y + 1);
-			neighbors[5] = new Coordinate(coord.y % 2 == 0 ? coord.x : coord.x + 1, coord.y + 1);
+			this.coordinate = coordinate;
+			neighbors[0].Set(coordinate.X + 1, coordinate.Y);
+			neighbors[1].Set(coordinate.Y % 2 == 0 ? coordinate.X : coordinate.X + 1, coordinate.Y - 1);
+			neighbors[2].Set(coordinate.Y % 2 == 0 ? coordinate.X - 1 : coordinate.X, coordinate.Y - 1);
+			neighbors[3].Set(coordinate.X - 1, coordinate.Y);
+			neighbors[4].Set(coordinate.Y % 2 == 0 ? coordinate.X - 1 : coordinate.X, coordinate.Y + 1);
+			neighbors[5].Set(coordinate.Y % 2 == 0 ? coordinate.X : coordinate.X + 1, coordinate.Y + 1);
 		}
 
 		public void SetType(CellType type)
@@ -72,7 +79,7 @@ namespace AnticTest.DataModel.Map
 			this.height = height;
 		}
 
-		public Coordinate[] GetNeighbors()
+		public TCoordinate[] GetNeighbors()
 		{
 			return neighbors;
 		}
@@ -87,7 +94,7 @@ namespace AnticTest.DataModel.Map
 			return type;
 		}
 
-		public Coordinate GetCoordinate()
+		public TCoordinate GetCoordinate()
 		{
 			return coordinate;
 		}

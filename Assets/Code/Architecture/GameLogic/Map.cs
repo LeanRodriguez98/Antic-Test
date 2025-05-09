@@ -1,33 +1,35 @@
+using AnticTest.Architecture.Pathfinding;
 using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.DataModel.Entities;
-using AnticTest.DataModel.Map;
+using AnticTest.DataModel.Grid;
 using AnticTest.Services.Provider;
 using System.Collections.Generic;
 
 namespace AnticTest.Architecture.GameLogic
 {
-	public class Map<TCell> : IService
-		where TCell : class, ICell, new()
+	public class Map<TCell, TCoordinate> : IService
+		where TCell : class, ICell<TCoordinate>, new()
+		where TCoordinate : struct, ICoordinate
 	{
 		DataBlackboard DataBlackboard => ServiceProvider.Instance.GetService<DataBlackboard>();
 
-		private Grid<TCell> grid;
+		private Grid<TCell, TCoordinate> grid;
 
-		private List<Ant> ants;
-		private List<EnemyBug> enemies;
-		private Flag flag;
+		private List<Ant<TCell, TCoordinate>> ants;
+		private List<EnemyBug<TCell, TCoordinate>> enemies;
+		private Flag<TCell, TCoordinate> flag;
 
 		private MapArchitectureData levelData;
 
-		public Coordinate Size => grid.GetSize();
+		public (int x, int y) Size => grid.GetSize();
 
 		public Map(MapArchitectureData levelData)
 		{
 			this.levelData = levelData;
-			grid = new Grid<TCell>(new Coordinate(levelData.Map.width, levelData.Map.height));
-			ants = new List<Ant>();
-			enemies = new List<EnemyBug>();
+			grid = new Grid<TCell, TCoordinate>(levelData.Map.width, levelData.Map.height);
+			ants = new List<Ant<TCell, TCoordinate>>();
+			enemies = new List<EnemyBug<TCell, TCoordinate>>();
 			CreateTerrain();
 		}
 
@@ -38,7 +40,9 @@ namespace AnticTest.Architecture.GameLogic
 				for (int x = 0; x < levelData.Map.width; x++)
 				{
 					TCell newCell = new TCell();
-					newCell.Init(new Coordinate(x, y),
+					TCoordinate newCellCordinate = new TCoordinate();
+					newCellCordinate.Set(x, y);
+					newCell.Init(newCellCordinate,
 						levelData.Map[x, y].cellArchitectureData.cellType,
 						levelData.Map[x, y].cellArchitectureData.cellHeight);
 					grid.SetCell(newCell);
@@ -57,18 +61,20 @@ namespace AnticTest.Architecture.GameLogic
 						continue;
 
 					if (entityArchitectureData is FlagArchitectureData)
-						flag = DataBlackboard.GetArchitectureData<FlagArchitectureData>(entityArchitectureData.name)?.Get(new Coordinate(x, y));
+						flag = (DataBlackboard.GetArchitectureData<FlagArchitectureData>(entityArchitectureData.name)?.Get(new Coordinate(x, y)) as Flag<TCell, TCoordinate>);
 					else if (entityArchitectureData is AntArchitectureData)
-						ants.Add(DataBlackboard.GetArchitectureData<AntArchitectureData>(entityArchitectureData.name)?.Get(new Coordinate(x, y)));
+						ants.Add(DataBlackboard.GetArchitectureData<AntArchitectureData>(entityArchitectureData.name)?.Get(new Coordinate(x, y)) as Ant<TCell, TCoordinate>);
 					else if (entityArchitectureData is EnemyBugArchitectureData)
-						enemies.Add(DataBlackboard.GetArchitectureData<EnemyBugArchitectureData>(entityArchitectureData.name)?.Get(new Coordinate(x, y)));
+						enemies.Add(DataBlackboard.GetArchitectureData<EnemyBugArchitectureData>(entityArchitectureData.name)?.Get(new Coordinate(x, y)) as EnemyBug<TCell, TCoordinate>);
 				}
 			}
 		}
 
 		public TCell this[Coordinate coordinate] { get { return GetCell(coordinate); } }
+		}
 
-		public TCell GetCell(Coordinate coordinate)
+		public TCell this[TCoordinate coordinate] { get { return GetCell(coordinate); } }
+		public TCell GetCell(TCoordinate coordinate)
 		{
 			return grid.GetCell(coordinate);
 		}

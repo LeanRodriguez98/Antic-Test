@@ -12,7 +12,7 @@ namespace System
 				if (type.IsGenericType && type.GetGenericTypeDefinition() == generic)
 					return true;
 
-				foreach (var interfaceType in type.GetInterfaces())
+				foreach (Type interfaceType in type.GetInterfaces())
 				{
 					if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == generic)
 						return true;

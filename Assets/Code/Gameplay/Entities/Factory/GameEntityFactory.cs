@@ -2,6 +2,7 @@ using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.Data.Entities.Factory;
 using AnticTest.DataModel.Entities;
+using AnticTest.DataModel.Grid;
 using AnticTest.Gameplay.Utils;
 using AnticTest.Services.Provider;
 using UnityEngine;
@@ -20,10 +21,10 @@ namespace AnticTest.Gameplay.Entities.Factory
 			entityContainer.transform.parent = transform;
 		}
 
-		private void SpawnGameplayEntity(ArchitectureData entityArchitectureData, Entity entity)
+		private void SpawnGameplayEntity(ArchitectureData entityArchitectureData, IEntity entity)
 		{
 			GameObject entityPrefab = DataBlackboard.GetPrefabFromData(entityArchitectureData);
-			Instantiate(entityPrefab, GridUtils.CoordinateToWorld(entity.GetCoordinate()), Quaternion.identity, entityContainer.transform);
+			Instantiate(entityPrefab, GridUtils.CoordinateToWorld(new Coordinate(entity.GetCoordinate())), Quaternion.identity, entityContainer.transform);
 		}
 	}
 }

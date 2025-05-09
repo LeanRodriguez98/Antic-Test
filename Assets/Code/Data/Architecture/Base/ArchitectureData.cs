@@ -1,9 +1,8 @@
-using AnticTest.Data.Gameplay;
 using UnityEngine;
 
 namespace AnticTest.Data.Architecture
 {
-    public abstract class ArchitectureData<T> : ArchitectureData
+	public abstract class ArchitectureData<T> : ArchitectureData
     {
         protected abstract T Get(params object[] parameters);
     }

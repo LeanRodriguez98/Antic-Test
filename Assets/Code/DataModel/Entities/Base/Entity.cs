@@ -1,36 +1,40 @@
-using AnticTest.DataModel.Map;
+using AnticTest.DataModel.Grid;
 using System;
 
 namespace AnticTest.DataModel.Entities
 {
-	public delegate void EntityEvent(Entity entity);
-
-	public abstract class Entity
+	public abstract class Entity<TCell, TCoordinate> : IEntity
+		where TCell : class, ICell<TCoordinate>, new()
+		where TCoordinate : struct, ICoordinate
 	{
+		public delegate void EntityEvent(Entity<TCell, TCoordinate> entity);
+		
 		public Action OnThisEntityCreated;
 		public Action OnThisEntityDestroyed;
 
 		protected uint ID;
-		protected Coordinate coordinate;
+		protected TCoordinate coordinate;
 
-		protected Entity(Coordinate coordinate, uint ID)
+		protected Entity(TCoordinate coordinate, uint ID)
 		{
 			this.coordinate = coordinate;
 			this.ID = ID;
 			OnThisEntityCreated?.Invoke();
 		}
 
+		protected abstract void SetParameters(params object[] parameters);
+
 		public uint GetID()
 		{
 			return ID;
 		}
 
-		public Coordinate GetCoordinate()
+		public (int x, int y) GetCoordinate()
 		{
-			return coordinate;
+			return coordinate.GetCoordinate();
 		}
 
-		public virtual void SetCoordinate(Coordinate coordinate)
+		public virtual void SetCoordinate(TCoordinate coordinate)
 		{
 			this.coordinate = coordinate;
 		}
