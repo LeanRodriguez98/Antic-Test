@@ -69,9 +69,17 @@ namespace AnticTest.Architecture.GameLogic
 						enemies.Add(DataBlackboard.GetArchitectureData<EnemyBugArchitectureData>(entityArchitectureData.name)?.Get(new Coordinate(x, y)) as EnemyBug<TCell, TCoordinate>);
 				}
 			}
-		}
 
-		public TCell this[Coordinate coordinate] { get { return GetCell(coordinate); } }
+			foreach (Ant<TCell, TCoordinate> ant in ants)
+			{
+				ant.SetPathfinderSystem(() => grid, new EntityPathfinding<TCell, TCoordinate>());
+			}
+
+			foreach (EnemyBug<TCell, TCoordinate> enemyBug in enemies)
+			{
+				enemyBug.SetPathfinderSystem(() => grid, new EntityPathfinding<TCell, TCoordinate>());
+				enemyBug.GoTo(grid[(TCoordinate)flag.GetCoordinate()]);
+			}
 		}
 
 		public TCell this[TCoordinate coordinate] { get { return GetCell(coordinate); } }

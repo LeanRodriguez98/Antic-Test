@@ -1,35 +1,30 @@
 using AnticTest.Architecture.GameLogic;
-using AnticTest.DataModel.Grid;
-using AnticTest.Data.Blackboard;
-using UnityEngine;
-using AnticTest.Gameplay.Map;
-using AnticTest.Gameplay.Entities.Factory;
 using AnticTest.Data.Architecture;
 using AnticTest.Gameplay.Components;
 using UnityEngine;
 
-namespace AnticTest.Gameplay.Game
+namespace AnticTest.Gameplay
 {
 	[RequireComponent(typeof(GameMap))]
 	[RequireComponent(typeof(GameEntityFactory))]
 	[RequireComponent(typeof(GameEntityRegistry))]
 	public class Game : MonoBehaviour
 	{
-		private GameMap gameMap;
 		private GameEntityFactory gameEntityFactory;
+		private GameEntityRegistry gameEntityRegistry;
 		private GameMap gameMap;
 
 		private GameLogic gameLogic;
-		private DataBlackboard dataBlackboard;
 
 		[SerializeField] private MapArchitectureData levelToLoad;
 
 		private void Awake()
 		{
-			dataBlackboard = new DataBlackboard();
 			gameLogic = new GameLogic(levelToLoad);
 			gameEntityFactory = GetComponent<GameEntityFactory>();
 			gameEntityFactory.Init();
+			gameEntityRegistry = GetComponent<GameEntityRegistry>();
+			gameEntityRegistry.Init();
 			gameMap = GetComponent<GameMap>();
 			gameMap.Init();
 			gameLogic.InitSimulation();
@@ -38,6 +33,7 @@ namespace AnticTest.Gameplay.Game
 		private void OnDisable()
 		{
 			gameEntityFactory.Dispose();
+			gameEntityRegistry.Dispose();
 			gameMap.Dispose();
 		}
 	}

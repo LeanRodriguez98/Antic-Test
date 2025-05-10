@@ -1,7 +1,7 @@
 namespace System.Collections.Generic
 {
 	[Serializable]
-	public class GridMatrix<T>
+	public class GridMatrix<T>: IEnumerable<T>
 	{
 		public int width = 0;
 		public int height = 0;
@@ -11,9 +11,9 @@ namespace System.Collections.Generic
 		{
 			this.width = width;
 			this.height = height;
-			data = new List<T>(width * height);
-			for (int i = 0; i < data.Count; i++)
-				data[i] = default;
+			data = new List<T>();
+			for (int i = 0; i < width * height; i++)
+				data.Add(defaultValue);
 		}
 
 		public void Resize(int newWidth, int newHeight, T defaultValue = default)
@@ -54,6 +54,16 @@ namespace System.Collections.Generic
 		}
 
 		public bool IsValid(int x, int y) => x >= 0 && x < width && y >= 0 && y < height;
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			foreach (T element in data)
+			{
+				yield return element;
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		public (int x, int y) Lenght => new(width, height);
 	}
