@@ -5,15 +5,19 @@ using UnityEngine;
 using AnticTest.Gameplay.Map;
 using AnticTest.Gameplay.Entities.Factory;
 using AnticTest.Data.Architecture;
+using AnticTest.Gameplay.Components;
+using UnityEngine;
 
 namespace AnticTest.Gameplay.Game
 {
 	[RequireComponent(typeof(GameMap))]
 	[RequireComponent(typeof(GameEntityFactory))]
-	public class Gameplay : MonoBehaviour
+	[RequireComponent(typeof(GameEntityRegistry))]
+	public class Game : MonoBehaviour
 	{
 		private GameMap gameMap;
 		private GameEntityFactory gameEntityFactory;
+		private GameMap gameMap;
 
 		private GameLogic gameLogic;
 		private DataBlackboard dataBlackboard;
@@ -29,6 +33,12 @@ namespace AnticTest.Gameplay.Game
 			gameMap = GetComponent<GameMap>();
 			gameMap.Init();
 			gameLogic.InitSimulation();
+		}
+
+		private void OnDisable()
+		{
+			gameEntityFactory.Dispose();
+			gameMap.Dispose();
 		}
 	}
 }

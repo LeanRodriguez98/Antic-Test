@@ -2,8 +2,6 @@
 
 namespace AnticTest.DataModel.Grid
 {
-	public delegate void CoordinateEvent(ICoordinate coordinate);
-
 	public struct Coordinate : ICoordinate
 	{
 		private int x;
@@ -24,9 +22,9 @@ namespace AnticTest.DataModel.Grid
 			y = coordinate.y;
 		}
 
-		public (int x, int y) GetCoordinate()
+		public ICoordinate GetCoordinate()
 		{
-			return (x, y);
+			return this;
 		}
 
 		public void Set(int x, int y)

@@ -3,13 +3,14 @@ using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.Data.Gameplay;
 using AnticTest.DataModel.Grid;
-using AnticTest.Services.Provider;
+using AnticTest.Systems.Provider;
 using System.Collections.Generic;
 using UnityEngine;
-namespace AnticTest.Gameplay.Map
+
+namespace AnticTest.Gameplay.Components
 {
 	[RequireComponent(typeof(Grid))]
-	public class GameMap : MonoBehaviour, IService
+	public class GameMap : GameComponent, IService
 	{
 		private Map<Cell<Coordinate>, Coordinate> LogicalMap => ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
 		private Grid gameGrid;
@@ -19,13 +20,17 @@ namespace AnticTest.Gameplay.Map
 
 		[SerializeField] private float cellHeight;
 
-		public void Init()
+		public override void Init()
 		{
 			gameGrid = GetComponent<Grid>();
 			cellsContainer = new GameObject("CellsContainer");
 			cellsContainer.transform.parent = transform;
 			CreateGameMap();
 			ServiceProvider.Instance.AddService<GameMap>(this);
+		}
+
+		public override void Dispose()
+		{
 		}
 
 		public float GetCellHeight()

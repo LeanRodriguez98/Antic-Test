@@ -31,9 +31,9 @@ namespace AnticTest.DataModel.Grid
 
 		public TCell GetCell(TCoordinate coordinate)
 		{
-			if (!map.IsValid(coordinate.GetCoordinate().x, coordinate.GetCoordinate().y))
+			if (!map.IsValid(coordinate.X, coordinate.Y))
 				return null;
-			return map[coordinate.GetCoordinate().x, coordinate.GetCoordinate().y];
+			return map[coordinate.X, coordinate.Y];
 		}
 
 		public (int x, int y) GetSize()

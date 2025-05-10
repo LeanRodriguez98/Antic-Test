@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AnticTest.Services.Provider
+namespace AnticTest.Systems.Provider
 {
 	public class ServiceProvider : IServiceProvider
 	{

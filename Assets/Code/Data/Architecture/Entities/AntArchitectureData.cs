@@ -1,7 +1,7 @@
 ﻿using AnticTest.Data.Entities.Factory;
 using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
-using AnticTest.Services.Provider;
+using AnticTest.Systems.Provider;
 using UnityEngine;
 
 namespace AnticTest.Data.Architecture

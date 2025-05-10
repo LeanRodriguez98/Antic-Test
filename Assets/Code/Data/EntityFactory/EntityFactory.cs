@@ -1,20 +1,20 @@
 ﻿using AnticTest.Data.Architecture;
+using AnticTest.Data.Events;
 using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
-using AnticTest.Services.Provider;
+using AnticTest.Systems.Events;
+using AnticTest.Systems.Provider;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace AnticTest.Data.Entities.Factory
 {
-	public delegate void EntityFactoryEvent(ArchitectureData entityArchitectureData, IEntity entity);
-
 	public sealed class EntityFactory : IService
 	{
+		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 		private const string SET_PARAMETERS_METHOD_NAME = "SetParameters";
 
-		public EntityFactoryEvent OnEntityCreated;
 		private uint lastEntityID;
 
 		private Dictionary<Type, ConstructorInfo> entityConstructors;
@@ -43,11 +43,13 @@ namespace AnticTest.Data.Entities.Factory
 			entityParametersSetters[entityType].Invoke(newEntity, new object[] { parammeters });
 
 			lastEntityID++;
-			OnEntityCreated?.Invoke(architectureData, newEntity);
+
+			EventBus.Raise(new EntityCreatedEvent(architectureData, newEntity));
+
 			return newEntity;
 		}
 
-		private void RegisterEntiyMethods(Type entityType) 
+		private void RegisterEntiyMethods(Type entityType)
 		{
 			if (entityType.IsClass && !entityType.IsAbstract && entityType.InheritsFromRawGeneric(typeof(Entity<,>)))
 			{

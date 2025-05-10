@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AnticTest.DataModel.Grid;
 
 namespace AnticTest.DataModel.Entities
 {
 	public interface IEntity
 	{
 		public uint GetID();
-		public (int x, int y) GetCoordinate();
+		public ICoordinate GetCoordinate();
 	}
 }

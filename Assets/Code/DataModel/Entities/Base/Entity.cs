@@ -1,5 +1,6 @@
 using AnticTest.DataModel.Grid;
-using System;
+using AnticTest.Systems.Events;
+using AnticTest.Systems.Provider;
 
 namespace AnticTest.DataModel.Entities
 {
@@ -7,10 +8,7 @@ namespace AnticTest.DataModel.Entities
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
-		public delegate void EntityEvent(Entity<TCell, TCoordinate> entity);
-		
-		public Action OnThisEntityCreated;
-		public Action OnThisEntityDestroyed;
+		protected EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
 		protected uint ID;
 		protected TCoordinate coordinate;
@@ -19,7 +17,6 @@ namespace AnticTest.DataModel.Entities
 		{
 			this.coordinate = coordinate;
 			this.ID = ID;
-			OnThisEntityCreated?.Invoke();
 		}
 
 		protected abstract void SetParameters(params object[] parameters);
@@ -29,7 +26,7 @@ namespace AnticTest.DataModel.Entities
 			return ID;
 		}
 
-		public (int x, int y) GetCoordinate()
+		public ICoordinate GetCoordinate()
 		{
 			return coordinate.GetCoordinate();
 		}

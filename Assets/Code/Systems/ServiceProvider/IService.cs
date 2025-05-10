@@ -1,4 +1,4 @@
-namespace AnticTest.Services.Provider
+namespace AnticTest.Systems.Provider
 {
 	public interface IService
 	{

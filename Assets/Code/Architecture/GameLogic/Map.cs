@@ -3,7 +3,8 @@ using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
-using AnticTest.Services.Provider;
+using AnticTest.Systems.Provider;
+using System;
 using System.Collections.Generic;
 
 namespace AnticTest.Architecture.GameLogic
@@ -74,9 +75,19 @@ namespace AnticTest.Architecture.GameLogic
 		}
 
 		public TCell this[TCoordinate coordinate] { get { return GetCell(coordinate); } }
+
 		public TCell GetCell(TCoordinate coordinate)
 		{
 			return grid.GetCell(coordinate);
+		}
+
+		public TCell this[ICoordinate coordinate] { get { return GetCell(coordinate); } }
+
+		public TCell GetCell(ICoordinate coordinate)
+		{
+			if (coordinate is TCoordinate)
+				return grid.GetCell((TCoordinate)coordinate);
+			throw new InvalidCastException();
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using AnticTest.Architecture.GameLogic;
 using AnticTest.DataModel.Grid;
-using AnticTest.Gameplay.Map;
-using AnticTest.Services.Provider;
+using AnticTest.Gameplay.Components;
+using AnticTest.Systems.Provider;
 using UnityEngine;
 
 namespace AnticTest.Gameplay.Utils
@@ -18,12 +18,12 @@ namespace AnticTest.Gameplay.Utils
 			return new Coordinate(vector3Int.x, vector3Int.y);
 		}
 
-		public static Vector2Int ToVector2Int(Coordinate coordinate)
+		public static Vector2Int ToVector2Int(ICoordinate coordinate)
 		{
 			return new Vector2Int(coordinate.X, coordinate.Y);
 		}
 
-		public static Vector3Int ToVector3Int(Coordinate coordinate)
+		public static Vector3Int ToVector3Int(ICoordinate coordinate)
 		{
 			return new Vector3Int(coordinate.X, coordinate.Y);
 		}
@@ -33,7 +33,7 @@ namespace AnticTest.Gameplay.Utils
 			return new Vector3Int(vector2Int.x, vector2Int.y);
 		}
 
-		public static Vector3 CoordinateToWorld(Coordinate coordinate)
+		public static Vector3 CoordinateToWorld(ICoordinate coordinate)
 		{
 			GameMap gameMap = ServiceProvider.Instance.GetService<GameMap>();
 			Map<Cell<Coordinate>, Coordinate> logicalMap = ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();

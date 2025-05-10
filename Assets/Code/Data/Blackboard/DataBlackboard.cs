@@ -1,10 +1,10 @@
-using AnticTest.Services.Provider;
 using AnticTest.Data.Architecture;
 using AnticTest.Data.Gameplay;
+using AnticTest.Systems.Provider;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Reflection;
+using UnityEngine;
 
 namespace AnticTest.Data.Blackboard
 {
@@ -27,7 +27,6 @@ namespace AnticTest.Data.Blackboard
 			LoadData(ref architectureDatas);
 			LoadData(ref gameplayDatas);
 			LoadEntityPrefabsFromData();
-			ServiceProvider.Instance.AddService<DataBlackboard>(this);
 		}
 
 		private void LoadData<DataType>(ref Dictionary<Type, List<DataType>> datas) where DataType : ScriptableObject
