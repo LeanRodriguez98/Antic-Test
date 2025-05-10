@@ -8,7 +8,7 @@ namespace AnticTest.Systems.Events
 	{
 		private readonly Dictionary<Type, List<Delegate>> subscribers = new Dictionary<Type, List<Delegate>>();
 
-		public void Subscribe<TEvent>(Action<TEvent> callback) where TEvent : IEvent
+		public void Subscribe<TEvent>(Action<TEvent> callback) where TEvent : struct, IEvent
 		{
 			Type eventType = typeof(TEvent);
 			if (!subscribers.ContainsKey(eventType))
@@ -17,14 +17,14 @@ namespace AnticTest.Systems.Events
 			subscribers[eventType].Add(callback);
 		}
 
-		public void Unsubscribe<TEent>(Action<TEent> callback) where TEent : IEvent
+		public void Unsubscribe<TEent>(Action<TEent> callback) where TEent : struct, IEvent
 		{
 			Type eventType = typeof(TEent);
 			if (subscribers.TryGetValue(eventType, out List<Delegate> list))
 				list.Remove(callback);
 		}
 
-		public void Raise<Tevent>(Tevent raisingEvent) where Tevent : IEvent
+		public void Raise<Tevent>(Tevent raisingEvent) where Tevent : struct, IEvent 
 		{
 			Type eventType = typeof(Tevent);
 			if (subscribers.TryGetValue(eventType, out List<Delegate> list))

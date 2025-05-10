@@ -8,6 +8,9 @@ namespace AnticTest.Gameplay.Utils
 {
 	public static class GridUtils
 	{
+		private static GameMap GameMap => ServiceProvider.Instance.GetService<GameMap>();
+		private static Map<Cell<Coordinate>, Coordinate> LogicalMap => ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
+
 		public static Coordinate ToCoordinate(Vector2Int vector2Int)
 		{
 			return new Coordinate(vector2Int.x, vector2Int.y);
@@ -35,10 +38,16 @@ namespace AnticTest.Gameplay.Utils
 
 		public static Vector3 CoordinateToWorld(ICoordinate coordinate)
 		{
-			GameMap gameMap = ServiceProvider.Instance.GetService<GameMap>();
-			Map<Cell<Coordinate>, Coordinate> logicalMap = ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
-			return gameMap.GetGrid().CellToWorld(ToVector3Int(coordinate)) +
-				Vector3.up * gameMap.GetCellHeight() * (float)logicalMap.GetCell(coordinate).GetHeight();
+			return GameMap.GetGrid().CellToWorld(ToVector3Int(coordinate)) +
+				Vector3.up * GameMap.GetCellHeight() * (float)LogicalMap.GetCell(coordinate).GetHeight();
+		}
+
+		public static Vector3 MovementToWorld(ICoordinate origin, ICoordinate target, float traveledDistace)
+		{
+			Vector3 worldOrigin = CoordinateToWorld(origin);
+			Vector3 worldTarget = CoordinateToWorld(target);
+			float logicalDistanceBetweenCells = LogicalMap.DistanceBetweenCells;
+			return worldOrigin + ((worldTarget - worldOrigin) * (traveledDistace / logicalDistanceBetweenCells));
 		}
 	}
 }

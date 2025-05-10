@@ -20,6 +20,7 @@ namespace AnticTest.DataModel.Entities
 		}
 
 		protected abstract void SetParameters(params object[] parameters);
+		public abstract void Update(float deltatime);
 
 		public uint GetID()
 		{

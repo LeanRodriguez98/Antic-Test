@@ -6,5 +6,6 @@ namespace AnticTest.DataModel.Entities
 	{
 		public uint GetID();
 		public ICoordinate GetCoordinate();
+		public void Update(float deltaTime);
 	}
 }

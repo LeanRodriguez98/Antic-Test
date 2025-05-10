@@ -4,7 +4,7 @@ using AnticTest.Systems.Events;
 
 namespace AnticTest.Data.Events
 {
-	public class EntityCreatedEvent : IEvent
+	public struct EntityCreatedEvent : IEvent
 	{
 		public ArchitectureData entityArchitectureData;
 		public IEntity entity;

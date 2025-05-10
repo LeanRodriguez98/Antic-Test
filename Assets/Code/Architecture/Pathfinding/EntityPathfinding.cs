@@ -1,5 +1,4 @@
 using AnticTest.Architecture.GameLogic;
-using AnticTest.Architecture.Utils;
 using AnticTest.DataModel.Grid;
 using AnticTest.DataModel.Pathfinding;
 using AnticTest.Systems.Provider;

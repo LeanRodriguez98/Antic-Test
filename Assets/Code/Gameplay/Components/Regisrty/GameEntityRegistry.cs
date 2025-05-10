@@ -25,7 +25,9 @@ namespace AnticTest.Gameplay.Components
 
 		private void OnEntityMoved(EntityMovedEvent entityMovedEvent)
 		{
-			gameEntities[entityMovedEvent.entityId].transform.position = GridUtils.CoordinateToWorld(entityMovedEvent.newPosition);
+			gameEntities[entityMovedEvent.entityId].transform.position =
+				GridUtils.MovementToWorld(entityMovedEvent.originPosition,
+				entityMovedEvent.targetPosition, entityMovedEvent.traveledDistance);
 		}
 
 		public void OnGameEntityCreated(GameEntityCreatedEvent gameEntityCreatedEvent)

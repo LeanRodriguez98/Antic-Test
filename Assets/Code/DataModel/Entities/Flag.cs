@@ -8,6 +8,10 @@ namespace AnticTest.DataModel.Entities
 	{
 		public Flag(TCoordinate coordinate, uint ID) : base(coordinate, ID) { }
 
+		public override void Update(float deltatime)
+		{
+		}
+
 		protected override void SetParameters(params object[] parameters)
 		{
 		}

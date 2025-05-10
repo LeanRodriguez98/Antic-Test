@@ -78,6 +78,7 @@ namespace AnticTest.Architecture.Pathfinding
 					currentCoordinate = coordinates[currentCoordinate].Parent;
 				}
 
+				path.Add(startCoordinate);
 				path.Reverse();
 				return path;
 			}

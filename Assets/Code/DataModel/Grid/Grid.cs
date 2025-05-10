@@ -7,7 +7,6 @@ namespace AnticTest.DataModel.Grid
 		where TCoordinate : struct, ICoordinate
 	{
 		private GridMatrix<TCell> map;
-
 		private TCoordinate selectedCoordinate;
 
 		public TCoordinate SelectedCoordinate { get => selectedCoordinate; }

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce0887735ceb7214988ee50a0e00cde3, type: 3}
   m_Name: Ladybug
   m_EditorClassIdentifier: 
-  speed: 0
-  health: 0
+  speed: 5
+  health: 50

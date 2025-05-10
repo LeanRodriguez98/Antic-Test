@@ -7,22 +7,33 @@ using AnticTest.Systems.Provider;
 
 namespace AnticTest.Architecture.GameLogic
 {
-	public class GameLogic : IService
+	public class GameLogic
 	{
-		private Map<Cell<Coordinate>, Coordinate> Map => ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
+		private EntityRegistry<Cell<Coordinate>, Coordinate> EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry<Cell<Coordinate>, Coordinate>>();
+		private EntitiesLogic<Cell<Coordinate>, Coordinate> EntitiesLogic => ServiceProvider.Instance.GetService<EntitiesLogic<Cell<Coordinate>, Coordinate>>();
+
+		private MapArchitectureData levelData;
 
 		public GameLogic(MapArchitectureData levelData)
 		{
+			this.levelData = levelData;
 			ServiceProvider.Instance.AddService<DataBlackboard>(new DataBlackboard());
 			ServiceProvider.Instance.AddService<EventBus>(new EventBus());
 			ServiceProvider.Instance.AddService<Map<Cell<Coordinate>, Coordinate>>(new Map<Cell<Coordinate>, Coordinate>(levelData));
+			ServiceProvider.Instance.AddService<EntityRegistry<Cell<Coordinate>, Coordinate>>(new EntityRegistry<Cell<Coordinate>, Coordinate>());
+			ServiceProvider.Instance.AddService<EntitiesLogic<Cell<Coordinate>, Coordinate>>(new EntitiesLogic<Cell<Coordinate>, Coordinate>());
 			ServiceProvider.Instance.AddService<EntityFactory>(new EntityFactory());
-			ServiceProvider.Instance.AddService<GameLogic>(this);
 		}
 
 		public void InitSimulation()
 		{
-			Map.SpawnInitialEntities();
+			EntityRegistry.SpawnInitialEntities(levelData);
+			EntitiesLogic.Init();
+		}
+
+		public void Update(float deltaTime) 
+		{
+			EntitiesLogic.Update(deltaTime);
 		}
 	}
 }

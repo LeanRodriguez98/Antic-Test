@@ -2,30 +2,30 @@ namespace System.Collections.Generic
 {
 	public static class EnumerableExtensions
 	{
-		public static IEnumerable<TResult> OfType<TResult>(this IEnumerable source)
+		public static IEnumerable<T> OfType<T>(this IEnumerable source)
 		{
 			if (source == null)
 				throw new ArgumentNullException(nameof(source));
 
 			foreach (object obj in source)
 			{
-				if (obj is TResult result)
+				if (obj is T result)
 					yield return result;
 			}
 		}
 
-		public static bool SequenceEqual<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second)
+		public static bool SequenceEqual<T>(this IEnumerable<T> first, IEnumerable<T> second)
 		{
 			if (first == null)
 				throw new ArgumentNullException(nameof(first));
 			if (second == null)
 				throw new ArgumentNullException(nameof(second));
 
-			EqualityComparer<TSource> comparer = EqualityComparer<TSource>.Default;
+			EqualityComparer<T> comparer = EqualityComparer<T>.Default;
 
-			using (IEnumerator<TSource> firstEnumerator = first.GetEnumerator())
+			using (IEnumerator<T> firstEnumerator = first.GetEnumerator())
 			{
-				using (IEnumerator<TSource> secondEnumerator = second.GetEnumerator())
+				using (IEnumerator<T> secondEnumerator = second.GetEnumerator())
 				{
 					while (true)
 					{
@@ -43,6 +43,15 @@ namespace System.Collections.Generic
 					}
 				}
 			}
+		}
+
+		public static IEnumerable<T> Concat<T>(IEnumerable<T> first, IEnumerable<T> second)
+		{
+			foreach (var item in first)
+				yield return item;
+
+			foreach (var item in second)
+				yield return item;
 		}
 	}
 }

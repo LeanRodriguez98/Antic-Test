@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AnticTest.Gameplay.Events
 {
-	public class GameEntityCreatedEvent : IEvent
+	public struct GameEntityCreatedEvent : IEvent
 	{
 		public uint entityID;
 		public GameObject objectInstance;

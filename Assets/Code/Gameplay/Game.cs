@@ -30,6 +30,11 @@ namespace AnticTest.Gameplay
 			gameLogic.InitSimulation();
 		}
 
+		private void Update()
+		{
+			gameLogic.Update(Time.deltaTime);
+		}
+
 		private void OnDisable()
 		{
 			gameEntityFactory.Dispose();
