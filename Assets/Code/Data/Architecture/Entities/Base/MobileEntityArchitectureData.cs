@@ -1,5 +1,6 @@
 ﻿using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
+using AnticTest.DataModel.Pathfinding;
 using UnityEngine;
 
 namespace AnticTest.Data.Architecture
@@ -11,10 +12,11 @@ namespace AnticTest.Data.Architecture
 	{
 		[SerializeField] private int speed;
 		[SerializeField] private int health;
+		[SerializeField] private Transitability transitability;
 
 		public override object[] GetParameters()
 		{
-			return new object[] { speed, health };
+			return new object[] { speed, health, transitability };
 		}
 	}
 }

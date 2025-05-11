@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace AnticTest.DataModel.Entities
 {
-	public abstract class MobileEntity<TCell, TCoordinate> : Entity<TCell, TCoordinate>
+	public abstract class MobileEntity<TCell, TCoordinate> : Entity<TCell, TCoordinate>, ITransitabilityProvider
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
@@ -16,6 +16,7 @@ namespace AnticTest.DataModel.Entities
 		protected List<TCell> currentPath;
 		protected int pathIndex;
 		protected float traveledDistanceBetweenCells;
+		protected Transitability transitability;
 
 		protected IPathfinder<TCell, TCoordinate> pathfinder;
 		protected Func<Grid<TCell, TCoordinate>> graphPointer;
@@ -32,6 +33,7 @@ namespace AnticTest.DataModel.Entities
 		{
 			speed = (int)parameters[0];
 			health = (int)parameters[1];
+			transitability = (Transitability)parameters[2];
 		}
 
 		public void SetLogicalDistanceBetweenCells(Func<float> logicalDistanceBetweenCells)
@@ -69,6 +71,11 @@ namespace AnticTest.DataModel.Entities
 					}
 				}
 			}
+		}
+
+		public Transitability GetTransitability()
+		{
+			return transitability;
 		}
 	}
 }

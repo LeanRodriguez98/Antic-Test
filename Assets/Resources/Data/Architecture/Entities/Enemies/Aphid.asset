@@ -14,3 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   health: 100
+  transitability:
+    moveToCellTypeCost:
+    - cellType: 1
+      value: 1
+    intransitableCellTypes: 0000000002000000
+    increaseHeightCost: 3
+    decreaseHeightCost: 0

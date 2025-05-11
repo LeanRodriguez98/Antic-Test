@@ -19,7 +19,15 @@ MonoBehaviour:
     m_Id: 430a1963-dab4-4ea8-a2b7-fddb50434ff0
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: a6aef514-46be-49b1-ad5b-946a8986aea2
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Left Pointer Tap Input
+      m_Flags: 0
     m_Flags: 0
   rightPointerTapInput:
     m_Name: Right Pointer Tap Input
@@ -28,7 +36,15 @@ MonoBehaviour:
     m_Id: c673a686-7bd5-4de7-b554-1aec8258f852
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 90751adb-b3ea-4d93-9559-7ec044d70f24
+      m_Path: <Mouse>/rightButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Right Pointer Tap Input
+      m_Flags: 0
     m_Flags: 0
   pointerPositionInput:
     m_Name: Pointer Position Input
@@ -37,5 +53,13 @@ MonoBehaviour:
     m_Id: 6abc80d6-bbce-49a2-8598-2f6bd05a07d1
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 7ead4217-eb47-4d57-9616-4409ae2d299c
+      m_Path: <Mouse>/position
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pointer Position Input
+      m_Flags: 0
     m_Flags: 0

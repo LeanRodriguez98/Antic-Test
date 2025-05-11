@@ -20,7 +20,7 @@ namespace AnticTest.Architecture.GameLogic
 		{
 			foreach (MobileEntity<TCell, TCoordinate> mobileEntity in EntityRegistry.MobileEntites)
 			{
-				mobileEntity.SetPathfinderSystem(() => Map.Grid, new EntityPathfinding<TCell, TCoordinate>());
+				mobileEntity.SetPathfinderSystem(() => Map.Grid, new EntityPathfinding<TCell, TCoordinate>(mobileEntity));
 				mobileEntity.SetLogicalDistanceBetweenCells(() => Map.DistanceBetweenCells);
 			}
 

@@ -12,5 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9a58f31d60c3d46ba587c41770a57c, type: 3}
   m_Name: Ant
   m_EditorClassIdentifier: 
-  speed: 0
-  health: 0
+  speed: 50
+  health: 100
+  transitability:
+    moveToCellTypeCost:
+    - cellType: 1
+      value: 1
+    - cellType: 2
+      value: 3
+    intransitableCellTypes: 00000000
+    increaseHeightCost: 2
+    decreaseHeightCost: 1
