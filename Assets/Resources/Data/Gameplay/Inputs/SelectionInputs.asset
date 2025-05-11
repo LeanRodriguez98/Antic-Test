@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ffd92b4ac385f0428e6caa5230ef398, type: 3}
+  m_Name: SelectionInputs
+  m_EditorClassIdentifier: 
+  leftPointerTapInput:
+    m_Name: Left Pointer Tap Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 430a1963-dab4-4ea8-a2b7-fddb50434ff0
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  rightPointerTapInput:
+    m_Name: Right Pointer Tap Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: c673a686-7bd5-4de7-b554-1aec8258f852
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  pointerPositionInput:
+    m_Name: Pointer Position Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 6abc80d6-bbce-49a2-8598-2f6bd05a07d1
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0

@@ -7,6 +7,8 @@
 		public void SetCoordinate(TCoordinate coord);
 		public void SetType(CellType type);
 		public void SetHeight(CellHeight height);
+		public CellType GetCellType();
+		public CellHeight GetHeight();
 		public TCoordinate GetCoordinate();
 		public TCoordinate[] GetNeighbors();
 	}

@@ -15,9 +15,6 @@ namespace AnticTest.DataModel.Grid
 		Two = 2,
 	}
 
-	public delegate void CellEvent<TCoordinate>(ICell<TCoordinate> cell) 
-		where TCoordinate : struct, ICoordinate;
-
 	public class Cell<TCoordinate> : ICell<TCoordinate>
 		where TCoordinate : struct, ICoordinate
 	{

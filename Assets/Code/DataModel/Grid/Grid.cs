@@ -7,17 +7,12 @@ namespace AnticTest.DataModel.Grid
 		where TCoordinate : struct, ICoordinate
 	{
 		private GridMatrix<TCell> map;
-		private TCoordinate selectedCoordinate;
+		private ICell<TCoordinate> selectedCell;
 
-		public TCoordinate SelectedCoordinate { get => selectedCoordinate; }
-
-		public CellEvent<TCoordinate> OnCellSelected;
-		public CellEvent<TCoordinate> OnCellDeselected;
-		public CellEvent<TCoordinate> OnCellHover;
+		public ICell<TCoordinate> SelectedCell { get => selectedCell; }
 
 		public Grid(int sizeX, int sizeY)
 		{
-			OnCellSelected += SetSelectedCoordinate;
 			map = new GridMatrix<TCell>(sizeX, sizeY, null);
 		}
 
@@ -30,7 +25,7 @@ namespace AnticTest.DataModel.Grid
 
 		public TCell GetCell(TCoordinate coordinate)
 		{
-			if (!map.IsValid(coordinate.X, coordinate.Y))
+			if (!IsValid(coordinate))
 				return null;
 			return map[coordinate.X, coordinate.Y];
 		}
@@ -45,9 +40,19 @@ namespace AnticTest.DataModel.Grid
 			return map;
 		}
 
-		private void SetSelectedCoordinate(ICell<TCoordinate> cell)
+		public void SetSelectedCell(TCoordinate coordinate)
 		{
-			selectedCoordinate = cell.GetCoordinate();
+			SetSelectedCell(GetCell(coordinate));
+		}
+
+		public void SetSelectedCell(ICell<TCoordinate> cell)
+		{
+			selectedCell = cell;
+		}
+
+		public bool IsValid(TCoordinate coordinate) 
+		{
+			return map.IsValid(coordinate.X, coordinate.Y);
 		}
 	}
 }

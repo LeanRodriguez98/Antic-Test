@@ -1,5 +1,4 @@
-﻿using AnticTest.Architecture.GameLogic;
-using AnticTest.Data.Architecture;
+﻿using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.Data.Gameplay;
 using AnticTest.DataModel.Grid;
@@ -12,7 +11,6 @@ namespace AnticTest.Gameplay.Components
 	[RequireComponent(typeof(Grid))]
 	public class GameMap : GameComponent, IService
 	{
-		private Map<Cell<Coordinate>, Coordinate> LogicalMap => ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
 		private Grid gameGrid;
 		private GameObject cellsContainer;
 

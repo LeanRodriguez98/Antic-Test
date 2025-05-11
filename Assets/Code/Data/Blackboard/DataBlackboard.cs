@@ -1,5 +1,7 @@
 using AnticTest.Data.Architecture;
+using AnticTest.Data.Exceptions;
 using AnticTest.Data.Gameplay;
+using AnticTest.Data.Gameplay.Inputs;
 using AnticTest.Systems.Provider;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,8 @@ namespace AnticTest.Data.Blackboard
 
 		private Dictionary<ArchitectureData, GameObject> prefabsFromArchitectureData;
 
+		private SelectionInputs selectionInputs;
+
 		public DataBlackboard()
 		{
 			architectureDatas = new Dictionary<Type, List<ArchitectureData>>();
@@ -27,6 +31,7 @@ namespace AnticTest.Data.Blackboard
 			LoadData(ref architectureDatas);
 			LoadData(ref gameplayDatas);
 			LoadEntityPrefabsFromData();
+			LoadInputsData();
 		}
 
 		private void LoadData<DataType>(ref Dictionary<Type, List<DataType>> datas) where DataType : ScriptableObject
@@ -41,6 +46,14 @@ namespace AnticTest.Data.Blackboard
 					datas.Add(dataType, new List<DataType>());
 				datas[dataType].Add(data);
 			}
+		}
+
+		private void LoadInputsData()
+		{
+			SelectionInputs[] selectionInputsDatas = Resources.LoadAll<SelectionInputs>(RESOURCES_DATA_FOLDER);
+			if (selectionInputsDatas == null || selectionInputsDatas.Length == 0)
+				throw new MissingDataException("No 'SelectionInputs' asset found in 'Resources/" + RESOURCES_DATA_FOLDER + "' folder.");
+			selectionInputs = selectionInputsDatas[0];
 		}
 
 		private void LoadEntityPrefabsFromData()
@@ -73,7 +86,6 @@ namespace AnticTest.Data.Blackboard
 				}
 			}
 		}
-
 
 		public DataType GetArchitectureData<DataType>(string name) where DataType : ArchitectureData
 		{
@@ -123,5 +135,7 @@ namespace AnticTest.Data.Blackboard
 		{
 			return prefabsFromArchitectureData[architectureData];
 		}
+
+		public SelectionInputs SelectionInputs => selectionInputs;
 	}
 }

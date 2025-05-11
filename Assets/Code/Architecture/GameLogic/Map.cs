@@ -1,5 +1,7 @@
+using AnticTest.Architecture.Events;
 using AnticTest.Data.Architecture;
 using AnticTest.DataModel.Grid;
+using AnticTest.Systems.Events;
 using AnticTest.Systems.Provider;
 using System;
 
@@ -9,6 +11,8 @@ namespace AnticTest.Architecture.GameLogic
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
+		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+
 		private Grid<TCell, TCoordinate> grid;
 		private float distanceBetweenCells;
 
@@ -21,6 +25,18 @@ namespace AnticTest.Architecture.GameLogic
 			grid = new Grid<TCell, TCoordinate>(levelData.Map.width, levelData.Map.height);
 			this.distanceBetweenCells = levelData.LogicalDistanceBetweenCells;
 			CreateTerrain(levelData);
+			EventBus.Subscribe<CellSelectedEvent<TCoordinate>>(OnCellSelected);
+			EventBus.Subscribe<CellDeselectedEvent>(OnCellDeselected);
+		}
+
+		private void OnCellSelected(CellSelectedEvent<TCoordinate> cellSelectedEvent)
+		{
+			grid.SetSelectedCell(cellSelectedEvent.selectedCoordinate);
+		}
+
+		private void OnCellDeselected(CellDeselectedEvent cellDeselectedEvent)
+		{
+			grid.SetSelectedCell(null);
 		}
 
 		public void CreateTerrain(MapArchitectureData levelData)
@@ -54,6 +70,11 @@ namespace AnticTest.Architecture.GameLogic
 			if (coordinate is TCoordinate)
 				return grid.GetCell((TCoordinate)coordinate);
 			throw new InvalidCastException();
+		}
+
+		public bool IsInBorders(TCoordinate coordinate)
+		{
+			return grid.IsValid(coordinate);
 		}
 	}
 }

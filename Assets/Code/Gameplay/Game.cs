@@ -8,11 +8,13 @@ namespace AnticTest.Gameplay
 	[RequireComponent(typeof(GameMap))]
 	[RequireComponent(typeof(GameEntityFactory))]
 	[RequireComponent(typeof(GameEntityRegistry))]
+	[RequireComponent(typeof(CellSelector))]
 	public class Game : MonoBehaviour
 	{
 		private GameEntityFactory gameEntityFactory;
 		private GameEntityRegistry gameEntityRegistry;
 		private GameMap gameMap;
+		private CellSelector inputReader;
 
 		private GameLogic gameLogic;
 
@@ -27,6 +29,8 @@ namespace AnticTest.Gameplay
 			gameEntityRegistry.Init();
 			gameMap = GetComponent<GameMap>();
 			gameMap.Init();
+			inputReader = GetComponent<CellSelector>();
+			inputReader.Init();
 			gameLogic.InitSimulation();
 		}
 

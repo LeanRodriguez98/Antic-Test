@@ -3,11 +3,10 @@ using AnticTest.Data.Events;
 using AnticTest.Gameplay.Events;
 using AnticTest.Gameplay.Utils;
 using AnticTest.Systems.Events;
-using AnticTest.Systems.Provider;
 using UnityEngine;
 
 namespace AnticTest.Gameplay.Components
-{ 
+{
 	public class GameEntityFactory : GameComponent
 	{
 		private GameObject entityContainer;
