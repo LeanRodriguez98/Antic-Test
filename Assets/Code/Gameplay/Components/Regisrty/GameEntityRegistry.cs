@@ -28,6 +28,12 @@ namespace AnticTest.Gameplay.Components
 			gameEntities[entityMovedEvent.entityId].transform.position =
 				GridUtils.MovementToWorld(entityMovedEvent.originPosition,
 				entityMovedEvent.targetPosition, entityMovedEvent.traveledDistance);
+
+			Vector3 direction = GridUtils.CoordinateToWorld(entityMovedEvent.targetPosition) -
+				GridUtils.CoordinateToWorld(entityMovedEvent.originPosition);
+			direction.y = 0;
+			gameEntities[entityMovedEvent.entityId].transform.rotation =
+				Quaternion.LookRotation(direction, Vector3.up);
 		}
 
 		public void OnGameEntityCreated(GameEntityCreatedEvent gameEntityCreatedEvent)
