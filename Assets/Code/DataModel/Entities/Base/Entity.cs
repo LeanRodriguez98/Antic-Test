@@ -8,8 +8,6 @@ namespace AnticTest.DataModel.Entities
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
-		protected EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-
 		protected uint ID;
 		protected TCoordinate coordinate;
 

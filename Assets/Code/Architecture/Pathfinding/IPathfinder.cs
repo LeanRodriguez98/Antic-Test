@@ -1,7 +1,7 @@
 ﻿using AnticTest.DataModel.Grid;
 using System.Collections.Generic;
 
-namespace AnticTest.DataModel.Pathfinding
+namespace AnticTest.Architecture.Pathfinding
 {
 	public interface IPathfinder<TCell, TCoordinate>
 		where TCell : class, ICell<TCoordinate>, new()
