@@ -1,0 +1,168 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c6fc996157ca54f92e7b03521c3e94, type: 3}
+  m_Name: CameraInputs
+  m_EditorClassIdentifier: 
+  moveSpeed: 10
+  rotationSpeed: 10
+  zoomSpeed: 4
+  zoomMinOffset: {x: 0, y: 7, z: -7}
+  zoomMaxOffset: {x: 0, y: 25, z: -25}
+  edgeSize: 20
+  mapViewOffset: 5
+  moveInput:
+    m_Name: Move Input
+    m_Type: 0
+    m_ExpectedControlType: Vector2
+    m_Id: 8864b9b5-4f10-468f-84c4-10e48ae9a702
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: PC
+      m_Id: 2e468709-3046-45c5-a5d9-5f8661aa4bd4
+      m_Path: OneModifier
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 4
+    - m_Name: modifier
+      m_Id: 91f2b8d9-86de-4c4e-b1dd-6e350bab031f
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 8
+    - m_Name: binding
+      m_Id: 6aae3336-9efe-42b0-8723-6e2e6b4aed98
+      m_Path: <Mouse>/delta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 8
+    - m_Name: 
+      m_Id: 5057860d-b0ff-472e-97d0-af2b23804eef
+      m_Path: <Touchscreen>/touch0/delta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 0
+    - m_Name: PC KeyBoard
+      m_Id: 8bef9b16-a551-493e-a97f-fa1edf358bb9
+      m_Path: 2DVector
+      m_Interactions: 
+      m_Processors: InvertVector2
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 4
+    - m_Name: up
+      m_Id: 6dcfaaba-2ec1-457d-8850-70b27b5a322f
+      m_Path: <Keyboard>/w
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 8
+    - m_Name: down
+      m_Id: 99de2368-8cc8-410e-83ae-fdfff34f2734
+      m_Path: <Keyboard>/s
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 8
+    - m_Name: left
+      m_Id: a8c34d0e-9d22-4255-b94c-b74e92d7d2e3
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 8
+    - m_Name: right
+      m_Id: c5cdae92-0a2f-4211-9543-5560888ed9d0
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Input
+      m_Flags: 8
+    m_Flags: 0
+  rotationInput:
+    m_Name: Rotation Input
+    m_Type: 1
+    m_ExpectedControlType: Button
+    m_Id: b4151a2e-5954-4ac2-acb8-57b2196e61e8
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 83a6ca26-9135-48c7-aacf-26b6bb6a8c2b
+      m_Path: <Touchscreen>/touch1/delta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotation Input
+      m_Flags: 0
+    - m_Name: PC
+      m_Id: 31ce6766-8804-4e97-a588-46f8d8f87be2
+      m_Path: 1DAxis(minValue=1,maxValue=-1)
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotation Input
+      m_Flags: 4
+    - m_Name: negative
+      m_Id: bf2fa23b-1a9b-439c-b56f-90b1f6035817
+      m_Path: <Keyboard>/q
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotation Input
+      m_Flags: 8
+    - m_Name: positive
+      m_Id: 7031c3f1-b2eb-4c54-8e53-d416d7e6eef8
+      m_Path: <Keyboard>/e
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotation Input
+      m_Flags: 8
+    m_Flags: 0
+  zoomInput:
+    m_Name: Zoom Input
+    m_Type: 0
+    m_ExpectedControlType: Vector2
+    m_Id: c908e31e-7f41-4f32-b49a-c8c47539b1c9
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 02224031-c4cb-4ef4-88fb-ebcff60fb3ed
+      m_Path: <Mouse>/scroll
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Zoom Input
+      m_Flags: 0
+    - m_Name: 
+      m_Id: ce179544-23c6-4d4f-acc9-73f769629564
+      m_Path: <Touchscreen>/touch2/delta
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Zoom Input
+      m_Flags: 0
+    m_Flags: 0

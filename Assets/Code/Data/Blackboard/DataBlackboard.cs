@@ -23,6 +23,7 @@ namespace AnticTest.Data.Blackboard
 		private Dictionary<ArchitectureData, GameObject> prefabsFromArchitectureData;
 
 		private SelectionInputs selectionInputs;
+		private CameraInputs cameraInputs;
 
 		public DataBlackboard()
 		{
@@ -54,6 +55,11 @@ namespace AnticTest.Data.Blackboard
 			if (selectionInputsDatas == null || selectionInputsDatas.Length == 0)
 				throw new MissingDataException("No 'SelectionInputs' asset found in 'Resources/" + RESOURCES_DATA_FOLDER + "' folder.");
 			selectionInputs = selectionInputsDatas[0];
+
+			CameraInputs[] cameraInputsDatas = Resources.LoadAll<CameraInputs>(RESOURCES_DATA_FOLDER);
+			if (cameraInputsDatas == null || cameraInputsDatas.Length == 0)
+				throw new MissingDataException("No 'CameraInputs' asset found in 'Resources/" + RESOURCES_DATA_FOLDER + "' folder.");
+			cameraInputs = cameraInputsDatas[0];
 		}
 
 		private void LoadEntityPrefabsFromData()
@@ -137,5 +143,6 @@ namespace AnticTest.Data.Blackboard
 		}
 
 		public SelectionInputs SelectionInputs => selectionInputs;
+		public CameraInputs CameraInputs => cameraInputs;
 	}
 }

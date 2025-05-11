@@ -18,6 +18,7 @@ namespace AnticTest.Gameplay
 
 		private GameLogic gameLogic;
 
+		[SerializeField] private GameCamera gameCamera;
 		[SerializeField] private MapArchitectureData levelToLoad;
 
 		private void Awake()
@@ -31,12 +32,14 @@ namespace AnticTest.Gameplay
 			gameMap.Init();
 			inputReader = GetComponent<CellSelector>();
 			inputReader.Init();
+			gameCamera.Init();
 			gameLogic.InitSimulation();
 		}
 
 		private void Update()
 		{
 			gameLogic.Update(Time.deltaTime);
+			gameCamera.ComponentUpdate(Time.deltaTime);
 		}
 
 		private void OnDisable()
@@ -44,6 +47,7 @@ namespace AnticTest.Gameplay
 			gameEntityFactory.Dispose();
 			gameEntityRegistry.Dispose();
 			gameMap.Dispose();
+			gameCamera.Dispose();
 		}
 	}
 }

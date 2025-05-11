@@ -66,9 +66,9 @@ namespace AnticTest.Gameplay.Components
 			SelectCell(context.ReadValue<Vector2>());
 		}
 
-		private void SelectCell(Vector2 screenPos)
+		private void SelectCell(Vector2 screenPosition)
 		{
-			Ray ray = gameCamera.ScreenPointToRay(screenPos);
+			Ray ray = gameCamera.ScreenPointToRay(screenPosition);
 
 			isSelectedHit = false;
 
