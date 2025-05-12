@@ -82,7 +82,7 @@ namespace AnticTest.DataModel.Entities
 
 		public void SetDamage(int damage)
 		{
-			health -= damage > health ? damage : health;
+			health -= (damage < health) ? damage : health;
 		}
 
 		public void ClearCurrentOponents()
