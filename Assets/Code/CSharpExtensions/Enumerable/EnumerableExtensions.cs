@@ -53,5 +53,63 @@ namespace System.Collections.Generic
 			foreach (var item in second)
 				yield return item;
 		}
+
+		public static T[] Add<T>(this T[] source, T item)
+		{
+			if (source == null)
+				return new T[] { item };
+
+			T[] result = new T[source.Length + 1];
+
+			for (int i = 0; i < source.Length; i++)
+			{
+				result[i] = source[i];
+			}
+
+			result[source.Length] = item;
+			return result;
+		}
+
+		public static T[] AddRange<T>(this T[] source, IEnumerable<T> items)
+		{
+			if (items == null)
+				return source ?? Array.Empty<T>();
+
+			int itemCount = 0;
+
+			foreach (T _ in items)
+			{
+				itemCount++;
+			}
+
+			if (itemCount == 0)
+				return source ?? Array.Empty<T>();
+
+			if (source == null || source.Length == 0)
+			{
+				T[] newArray = new T[itemCount];
+				int index = 0;
+				foreach (T item in items)
+				{ 
+					newArray[index++] = item;
+				}
+
+				return newArray;
+			}
+
+			T[] combined = new T[source.Length + itemCount];
+			for (int i = 0; i < source.Length; i++)
+			{ 
+				combined[i] = source[i];
+			}
+
+			int offset = source.Length;
+			foreach (T item in items)
+			{ 
+				combined[offset++] = item;
+			}
+
+			return combined;
+		}
 	}
 }

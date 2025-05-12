@@ -23,15 +23,26 @@ namespace AnticTest.Architecture.GameLogic
 		public void Init()
 		{
 			EventBus.Subscribe<EntityChangeCoordinateEvent>(UpdateCurrentOponents);
+			EventBus.Subscribe<EntityDestroyEvent>(UpdateCurrentOponents);
+
+			foreach (Ant<TCell, TCoordinate> ant in EntityRegistry.Ants)
+			{
+				ant.InitFSM(Enum.GetValues(typeof(AntStates)).Length, Enum.GetValues(typeof(AntFlags)).Length);
+				AddPatrolState(ant);
+				AddDefendState(ant);
+				AddAntMovementState(ant);
+				RegisterAntTransitions(ant);
+				ant.StartFSM((int)AntStates.Patrol);
+			}
 
 			foreach (EnemyBug<TCell, TCoordinate> enemyBug in EntityRegistry.Enemies)
 			{
-				enemyBug.InitFSM(Enum.GetValues(typeof(EntityStates)).Length, Enum.GetValues(typeof(EntityFlags)).Length);
-				enemyBug.Destiny = (TCoordinate)EntityRegistry.Flag.GetCoordinate();
-				AddMoveState(enemyBug);
+				enemyBug.InitFSM(Enum.GetValues(typeof(EnemyStates)).Length, Enum.GetValues(typeof(EnemyFlags)).Length);
+				AddEnemyMovementState(enemyBug);
 				AddFightState(enemyBug);
+				enemyBug.Destiny = (TCoordinate)EntityRegistry.Flag.GetCoordinate();
 				RegisterEnemyTransitions(enemyBug);
-				enemyBug.StartFSM((int)EntityStates.Movement);
+				enemyBug.StartFSM((int)EnemyStates.Movement);
 			}
 		}
 
@@ -43,7 +54,51 @@ namespace AnticTest.Architecture.GameLogic
 			}
 		}
 
-		private void AddMoveState(MobileEntity<TCell, TCoordinate> mobileEntity)
+		private void AddPatrolState(Ant<TCell, TCoordinate> ant)
+		{
+			ant.AddState
+				(
+				stateIndex: (int)AntStates.Patrol,
+				state: new PatrolState<TCell, TCoordinate>(),
+				onTickParameters: () => new object[]
+					{
+						ant.HasOponents,
+						false
+					}
+				);
+		}
+
+		private void AddDefendState(Ant<TCell, TCoordinate> ant)
+		{
+			AddCombatState(ant, new DefendState(), (int)AntStates.Defend);
+		}
+
+		private void AddAntMovementState(Ant<TCell, TCoordinate> ant)
+		{
+			AddMovementState(ant,
+							 new AntMovementState<TCell, TCoordinate>(() => Map.Grid,
+							 new EntityPathfinding<TCell, TCoordinate>(ant),
+							 () => Map.DistanceBetweenCells),
+							 (int)AntStates.Movement);
+		}
+
+		private void AddEnemyMovementState(EnemyBug<TCell, TCoordinate> enemyBug)
+		{
+			AddMovementState(enemyBug,
+							 new EnemyMovementState<TCell, TCoordinate>(() => Map.Grid,
+							 new EntityPathfinding<TCell, TCoordinate>(enemyBug),
+							 () => Map.DistanceBetweenCells), 
+							 (int)EnemyStates.Movement);
+		}
+
+		private void AddFightState(EnemyBug<TCell, TCoordinate> enemyBug)
+		{
+			AddCombatState(enemyBug, new FightState(), (int)EnemyStates.Fight);
+		}
+
+		private void AddMovementState<TMovementState>(MobileEntity<TCell, TCoordinate> mobileEntity,
+													  TMovementState movementState, int stateIndex)
+													  where TMovementState : MovementBaseState<TCell, TCoordinate>
 		{
 			Action<TCoordinate> SetCoordinate = (coordinate) => { mobileEntity.SetCoordinate(coordinate); };
 			Func<TCell> GetDestiny = () => Map.Grid[mobileEntity.Destiny];
@@ -52,10 +107,8 @@ namespace AnticTest.Architecture.GameLogic
 
 			mobileEntity.AddState
 				(
-				stateIndex: (int)EntityStates.Movement,
-				state: new MoveState<TCell, TCoordinate>(() => Map.Grid,
-												  new EntityPathfinding<TCell, TCoordinate>(mobileEntity),
-												  () => Map.DistanceBetweenCells),
+				stateIndex: stateIndex,
+				state: movementState,
 				onEnterParameters: () => new object[]
 					{
 							Map.Grid[(TCoordinate)mobileEntity.GetCoordinate()],
@@ -72,15 +125,19 @@ namespace AnticTest.Architecture.GameLogic
 				);
 		}
 
-		private void AddFightState(MobileEntity<TCell, TCoordinate> mobileEntity) 
+		private void AddCombatState<TCombatState>(MobileEntity<TCell, TCoordinate> mobileEntity,
+												  TCombatState combatState, int stateIndex)
+												  where TCombatState : CombatBaseState
 		{
+			Func<List<ICombatant>> GetCurrentOponents = () => mobileEntity.CurrentOponents;
+
 			mobileEntity.AddState
 				(
-				stateIndex: (int)EntityStates.Fight,
-				state: new FightState(),
-				onTickParameters: () => new object[] 
+				stateIndex: stateIndex,
+				state: combatState,
+				onTickParameters: () => new object[]
 					{
-						mobileEntity.CurrentOponents,
+						GetCurrentOponents,
 						mobileEntity.Damage,
 						mobileEntity.TimeBetweenAtacks
 					}
@@ -89,21 +146,79 @@ namespace AnticTest.Architecture.GameLogic
 
 		private void RegisterEnemyTransitions(EnemyBug<TCell, TCoordinate> enemyBug)
 		{
-			enemyBug.SetFSMTransition((int)EntityStates.Movement, 
-									  (int)EntityFlags.OnOponentReach, 
-									  (int)EntityStates.Fight, () =>
+			enemyBug.SetFSMTransition((int)EnemyStates.Movement,
+									  (int)EnemyFlags.OnAntReach,
+									  (int)EnemyStates.Fight, () =>
 									  {
-										  
+
 									  });
 
-			enemyBug.SetFSMTransition((int)EntityStates.Fight, 
-									  (int)EntityFlags.OnEnemyDead, 
-									  (int)EntityStates.Movement, () => 
+			enemyBug.SetFSMTransition((int)EnemyStates.Fight,
+									  (int)EnemyFlags.OnAntDead,
+									  (int)EnemyStates.Movement, () =>
+									  {
+
+									  });
+
+			enemyBug.SetFSMTransition((int)EnemyStates.Fight,
+									  (int)EnemyFlags.OnAntDesapears,
+									  (int)EnemyStates.Movement, () =>
 									  {
 
 									  });
 		}
 
+		private void RegisterAntTransitions(Ant<TCell, TCoordinate> ant) 
+		{
+			ant.SetFSMTransition((int)AntStates.Movement,
+								 (int)AntFlags.OnEnemyApproach,
+								 (int)AntStates.Defend, () =>
+								 {
+								 
+								 });
+
+			ant.SetFSMTransition((int)AntStates.Movement,
+								 (int)AntFlags.OnDestinationReach,
+								 (int)AntStates.Patrol, () =>
+								 {
+
+								 });
+
+			ant.SetFSMTransition((int)AntStates.Patrol,
+								 (int)AntFlags.OnEnemyApproach,
+								 (int)AntStates.Defend, () =>
+								 {
+
+								 });
+
+			ant.SetFSMTransition((int)AntStates.Patrol,
+								 (int)AntFlags.OnMovementOrder,
+								 (int)AntStates.Movement, () =>
+								 {
+									 // set destination
+								 });
+
+			ant.SetFSMTransition((int)AntStates.Defend,
+								 (int)AntFlags.OnEnemyDead,
+								 (int)AntStates.Patrol, () =>
+								 {
+
+								 });
+
+			ant.SetFSMTransition((int)AntStates.Defend,
+								 (int)AntFlags.OnEnemyDesapears,
+								 (int)AntStates.Patrol, () =>
+								 {
+
+								 });
+
+			ant.SetFSMTransition((int)AntStates.Defend,
+								 (int)AntFlags.OnMovementOrder,
+								 (int)AntStates.Movement, () =>
+								 {
+									 // set destination
+								 });
+		}
 
 		private void UpdateCurrentOponents(EntityChangeCoordinateEvent entityChangeCoordinateEvent)
 		{
@@ -111,7 +226,12 @@ namespace AnticTest.Architecture.GameLogic
 			UpdateOponentsIn((TCoordinate)entityChangeCoordinateEvent.newCoordinate);
 		}
 
-		private void UpdateOponentsIn(TCoordinate coordinate) 
+		private void UpdateCurrentOponents(EntityDestroyEvent entityDestroyEvent)
+		{
+			UpdateOponentsIn((TCoordinate)entityDestroyEvent.entity.GetCoordinate());
+		}
+
+		private void UpdateOponentsIn(TCoordinate coordinate)
 		{
 			foreach (KeyValuePair<Type, List<uint>> allEntiiesInCoordinate in Map.GetAllEntitiesIn(coordinate))
 			{
@@ -122,11 +242,11 @@ namespace AnticTest.Architecture.GameLogic
 			}
 		}
 
-		private void SetCurrentOponentsOf(IEntity entity) 
+		private void SetCurrentOponentsOf(IEntity entity)
 		{
 			if (!(entity is ICombatant))
 				return;
-			
+
 			ICombatant combatant = (ICombatant)entity;
 			combatant.ClearCurrentOponents();
 
@@ -144,7 +264,7 @@ namespace AnticTest.Architecture.GameLogic
 			}
 		}
 
-		private bool AreOponents(ICombatant combatantA, ICombatant combatantB) 
+		private bool AreOponents(ICombatant combatantA, ICombatant combatantB)
 		{
 			return (combatantA is Ant<TCell, TCoordinate> && combatantB is EnemyBug<TCell, TCoordinate>) ||
 				   (combatantB is Ant<TCell, TCoordinate> && combatantA is EnemyBug<TCell, TCoordinate>);

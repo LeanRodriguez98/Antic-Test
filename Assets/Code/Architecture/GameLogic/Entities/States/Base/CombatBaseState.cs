@@ -1,11 +1,12 @@
 ﻿using AnticTest.Architecture.Events;
 using AnticTest.DataModel.Entities;
 using AnticTest.Systems.FSM;
+using System;
 using System.Collections.Generic;
 
 namespace AnticTest.Architecture.States
 {
-	public class FightState : State
+	public abstract class CombatBaseState : State
 	{
 		private float attackCouldown;
 
@@ -16,26 +17,34 @@ namespace AnticTest.Architecture.States
 
 		public override void TickBehaviours(float deltaTime, params object[] parameters)
 		{
-			List<ICombatant> targetOponents = (List<ICombatant>)parameters[0];
+			Func<List<ICombatant>> targetOponents = (Func<List<ICombatant>>)parameters[0];
 			int damage = (int)parameters[1];
 			float timeBetweenAtacks = (float)parameters[2];
 
-			//if targetoponents.count == 0
+			int targetDesapearsFlag = (int)parameters[3];
+			int targetDeadFlag = (int)parameters[4];
 
-			if (targetOponents[0].IsDead)
+			if (targetOponents.Invoke().Count == 0)
 			{
-				EventBus.Raise(new EntityDestroyEvent((IEntity)targetOponents[0]));
-				FSMTrigger.Invoke((int)EntityFlags.OnEnemyDead);
+				FSMTrigger.Invoke(targetDesapearsFlag);
+				return;
+			}
+
+			if (targetOponents.Invoke()[0].IsDead)
+			{
+				EventBus.Raise(new EntityDestroyEvent((IEntity)targetOponents.Invoke()[0]));
+				FSMTrigger.Invoke(targetDeadFlag);
+				return;
 			}
 
 			attackCouldown += deltaTime;
 			if (attackCouldown >= timeBetweenAtacks)
 			{
-				targetOponents[0].SetDamage(damage);
+				targetOponents.Invoke()[0].SetDamage(damage);
 				attackCouldown = 0.0f;
 			}
 		}
-		
+
 		public override void ExitBehaviours(params object[] parameters)
 		{
 		}
