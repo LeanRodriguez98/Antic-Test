@@ -7,13 +7,15 @@ using UnityEngine.InputSystem;
 
 namespace AnticTest.Gameplay.Components
 {
-	public class CellSelector : GameComponent
+	[RequireComponent(typeof(CellSelectorViewer))]
+	public class CellSelector : UpdatableGameComponent
 	{
 		private Camera gameCamera;
 		private int heights;
 		private Plane[] planes;
 		private bool isSelectedHit;
 		private ICell<Coordinate> selectedCell;
+		private CellSelectorViewer cellSelectorViewer;
 
 		private Grid Grid => GameMap.GetGrid();
 
@@ -22,6 +24,8 @@ namespace AnticTest.Gameplay.Components
 			gameCamera = Camera.main;
 			heights = Enum.GetNames(typeof(CellHeight)).Length;
 			planes = new Plane[heights];
+			cellSelectorViewer = GetComponent<CellSelectorViewer>();
+			cellSelectorViewer.Init();
 
 			for (int i = 0; i < heights; i++)
 			{
@@ -40,6 +44,8 @@ namespace AnticTest.Gameplay.Components
 
 		public override void Dispose()
 		{
+			cellSelectorViewer.Dispose();
+
 			DataBlackboard.SelectionInputs.leftPointerTapInput.performed -= OnLeftPointerTap;
 			DataBlackboard.SelectionInputs.leftPointerTapInput.Disable();
 
@@ -48,6 +54,11 @@ namespace AnticTest.Gameplay.Components
 
 			DataBlackboard.SelectionInputs.pointerPositionInput.performed -= OnPointerPosition;
 			DataBlackboard.SelectionInputs.pointerPositionInput.Disable();
+		}
+
+		public override void ComponentUpdate(float deltaTime)
+		{
+			cellSelectorViewer.ComponentUpdate(deltaTime);
 		}
 
 		private void OnLeftPointerTap(InputAction.CallbackContext context)
@@ -84,6 +95,7 @@ namespace AnticTest.Gameplay.Components
 						LogicalMap.IsInBorders(selectedCell.GetCoordinate()))
 					{
 						isSelectedHit = true;
+						return;
 					}
 				}
 			}

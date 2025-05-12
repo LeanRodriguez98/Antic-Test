@@ -40,6 +40,7 @@ namespace AnticTest.Gameplay
 		{
 			gameLogic.Update(Time.deltaTime);
 			gameCamera.ComponentUpdate(Time.deltaTime);
+			inputReader.ComponentUpdate(Time.deltaTime);
 		}
 
 		private void LateUpdate()
