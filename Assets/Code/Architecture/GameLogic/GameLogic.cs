@@ -35,5 +35,10 @@ namespace AnticTest.Architecture.GameLogic
 		{
 			EntitiesLogic.Update(deltaTime);
 		}
+
+		public void PostUpdate() 
+		{
+			EntityRegistry.RemoveDestroyedEntites();
+		}
 	}
 }

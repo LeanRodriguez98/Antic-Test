@@ -1,7 +1,9 @@
-﻿using AnticTest.Data.Architecture;
+﻿using AnticTest.Architecture.Events;
+using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
+using AnticTest.Systems.Events;
 using AnticTest.Systems.Provider;
 using System;
 using System.Collections.Generic;
@@ -14,19 +16,23 @@ namespace AnticTest.Architecture.GameLogic
 	{
 		private DataBlackboard DataBlackboard => ServiceProvider.Instance.GetService<DataBlackboard>();
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
-
+		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
 		private List<Ant<TCell, TCoordinate>> ants;
 		private List<EnemyBug<TCell, TCoordinate>> enemies;
 		private Flag<TCell, TCoordinate> flag;
 
 		private Dictionary<uint, IEntity> entities;
+		private List<IEntity> toDestroy;
 
 		public EntityRegistry()
 		{
 			ants = new List<Ant<TCell, TCoordinate>>();
 			enemies = new List<EnemyBug<TCell, TCoordinate>>();
 			entities = new Dictionary<uint, IEntity>();
+			toDestroy = new List<IEntity>();
+
+			EventBus.Subscribe<EntityDestroyEvent>(RemoveEntityFromRegistry);
 		}
 
 		public IEntity this[uint ID] => entities[ID];
@@ -86,6 +92,29 @@ namespace AnticTest.Architecture.GameLogic
 						break;
 					}
 			}
+		}
+
+
+		private void RemoveEntityFromRegistry(EntityDestroyEvent entityDestroyEvent)
+		{
+			toDestroy.Add(entityDestroyEvent.entity);
+		}
+
+		public void RemoveDestroyedEntites()
+		{
+			foreach (IEntity entity in toDestroy)
+			{
+				if (entity is Ant<TCell, TCoordinate>)
+					ants.Remove((Ant<TCell, TCoordinate>)entity);
+				if (entity is EnemyBug<TCell, TCoordinate>)
+					enemies.Remove((EnemyBug<TCell, TCoordinate>)entity);
+				if (flag == entity)
+					flag = null;
+
+				if (entities.ContainsKey(entity.GetID()))
+					entities.Remove(entity.GetID());
+			}
+			toDestroy.Clear();
 		}
 	}
 }

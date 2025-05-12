@@ -26,15 +26,18 @@ namespace AnticTest.Gameplay.Components
 
 		private void OnEntityMoved(EntityMovedEvent entityMovedEvent)
 		{
-			gameEntities[entityMovedEvent.entityId].transform.position =
-				GridUtils.MovementToWorld(entityMovedEvent.originPosition,
-				entityMovedEvent.targetPosition, entityMovedEvent.traveledDistance);
+			if (gameEntities.ContainsKey(entityMovedEvent.entityId))
+			{
+				gameEntities[entityMovedEvent.entityId].transform.position =
+					GridUtils.MovementToWorld(entityMovedEvent.originPosition,
+					entityMovedEvent.targetPosition, entityMovedEvent.traveledDistance);
 
-			Vector3 direction = GridUtils.CoordinateToWorld(entityMovedEvent.targetPosition) -
-				GridUtils.CoordinateToWorld(entityMovedEvent.originPosition);
-			direction.y = 0;
-			gameEntities[entityMovedEvent.entityId].transform.rotation =
-				Quaternion.LookRotation(direction, Vector3.up);
+				Vector3 direction = GridUtils.CoordinateToWorld(entityMovedEvent.targetPosition) -
+					GridUtils.CoordinateToWorld(entityMovedEvent.originPosition);
+				direction.y = 0;
+				gameEntities[entityMovedEvent.entityId].transform.rotation =
+					Quaternion.LookRotation(direction, Vector3.up);
+			}
 		}
 
 		public void OnGameEntityCreated(GameEntityCreatedEvent gameEntityCreatedEvent)
@@ -44,8 +47,11 @@ namespace AnticTest.Gameplay.Components
 
 		private void OnEntityDestroyed(EntityDestroyEvent entityDestroyEvent)
 		{
-			Destroy(gameEntities[entityDestroyEvent.entity.GetID()]);
-			gameEntities.Remove(entityDestroyEvent.entity.GetID());
+			if (gameEntities.ContainsKey(entityDestroyEvent.entity.GetID()))
+			{
+				Destroy(gameEntities[entityDestroyEvent.entity.GetID()]);
+				gameEntities.Remove(entityDestroyEvent.entity.GetID());
+			}
 		}
 	}
 }

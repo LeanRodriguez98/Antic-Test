@@ -42,6 +42,11 @@ namespace AnticTest.Gameplay
 			gameCamera.ComponentUpdate(Time.deltaTime);
 		}
 
+		private void LateUpdate()
+		{
+			gameLogic.PostUpdate();
+		}
+
 		private void OnDisable()
 		{
 			gameEntityFactory.Dispose();
