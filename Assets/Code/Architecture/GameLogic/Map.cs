@@ -46,6 +46,7 @@ namespace AnticTest.Architecture.GameLogic
 		}
 
 		public TCell SelectedCell => (TCell)grid.SelectedCell;
+		public bool HasCellSelected => grid.SelectedCell != null;
 
 		private void OnCellSelected(CellSelectedEvent<TCoordinate> cellSelectedEvent)
 		{

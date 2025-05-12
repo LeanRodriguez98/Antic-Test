@@ -1,4 +1,5 @@
-﻿using AnticTest.Architecture.Events;
+﻿using AnticTest.Architecture.GameLogic.Strategies;
+using AnticTest.Architecture.Events;
 using AnticTest.Architecture.Pathfinding;
 using AnticTest.Architecture.States;
 using AnticTest.DataModel.Entities;
@@ -18,21 +19,16 @@ namespace AnticTest.Architecture.GameLogic
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
 		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
-		private List<uint> selectedAntsId;
+		private IAntsStrategy antsStrategy;
 
 		public EntitiesLogic() { }
 
 		public void Init()
 		{
-			selectedAntsId = new List<uint>();
-
 			EventBus.Subscribe<EntityChangeCoordinateEvent>(UpdateCurrentOponents);
-			EventBus.Subscribe<EntityChangeCoordinateEvent>(SelectAnts);
 			EventBus.Subscribe<EntityDestroyEvent>(UpdateCurrentOponents);
-			EventBus.Subscribe<CellSelectedEvent<TCoordinate>>(SetAntsDestination);
-			EventBus.Subscribe<CellSelectedEvent<TCoordinate>>(SelectAnts);
-			EventBus.Subscribe<CellDeselectedEvent>(DeselectAnts);
-
+			antsStrategy = new AntsManualStrategy<TCell, TCoordinate>();
+			antsStrategy.Enable();
 
 			foreach (Ant<TCell, TCoordinate> ant in EntityRegistry.Ants)
 			{
@@ -262,31 +258,6 @@ namespace AnticTest.Architecture.GameLogic
 		{
 			return (combatantA is Ant<TCell, TCoordinate> && combatantB is EnemyBug<TCell, TCoordinate>) ||
 				   (combatantB is Ant<TCell, TCoordinate> && combatantA is EnemyBug<TCell, TCoordinate>);
-		}
-
-		private void SetAntsDestination(CellSelectedEvent<TCoordinate> cellSelectedEvent)
-		{
-			foreach (uint id in selectedAntsId)
-			{
-				(EntityRegistry[id] as Ant<TCell, TCoordinate>).Destiny = cellSelectedEvent.selectedCoordinate;
-			}
-		}
-
-		private void SelectAnts(EntityChangeCoordinateEvent entityChangeCoordinateEvent)
-		{
-			if (entityChangeCoordinateEvent.oldCoordinate.Equals(Map.SelectedCell.GetCoordinate()) ||
-				entityChangeCoordinateEvent.newCoordinate.Equals(Map.SelectedCell.GetCoordinate()))
-				selectedAntsId = Map.GetAllEntitiesIn<Ant<TCell, TCoordinate>>(Map.SelectedCell.GetCoordinate());
-		}
-
-		private void SelectAnts(CellSelectedEvent<TCoordinate> cellSelectedEvent)
-		{
-			selectedAntsId = Map.GetAllEntitiesIn<Ant<TCell, TCoordinate>>(cellSelectedEvent.selectedCoordinate);
-		}
-
-		private void DeselectAnts(CellDeselectedEvent cellDeselectedEvent)
-		{
-			selectedAntsId.Clear();
 		}
 	}
 }
