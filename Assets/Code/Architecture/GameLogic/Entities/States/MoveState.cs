@@ -19,6 +19,8 @@ namespace AnticTest.Architecture.States
 		private IPathfinder<TCell, TCoordinate> pathfinder;
 		private Func<Grid<TCell, TCoordinate>> graphPointer;
 		private Func<float> logicalDistanceBetweenCells;
+		private bool hasUnfinishedTravelToCellCenter;
+		private TCell unfinishedTravelOrigin;
 
 		public MoveState(Func<Grid<TCell, TCoordinate>> graphPointer,
 						 IPathfinder<TCell, TCoordinate> pathfinder,
@@ -27,6 +29,8 @@ namespace AnticTest.Architecture.States
 			this.graphPointer = graphPointer;
 			this.pathfinder = pathfinder;
 			this.logicalDistanceBetweenCells = logicalDistanceBetweenCells;
+			hasUnfinishedTravelToCellCenter = false;
+			unfinishedTravelOrigin = null;
 		}
 
 		public override void EnterBehaviours(params object[] parameters)
@@ -43,30 +47,52 @@ namespace AnticTest.Architecture.States
 			Action<TCoordinate> SetCoordinate = (Action<TCoordinate>)parameters[2];
 			Func<TCoordinate> GetCoordinate = (Func<TCoordinate>)parameters[3];
 			Func<bool> HasOponents = (Func<bool>)parameters[4];
-
-			if (currentPath != null)
+			if (hasUnfinishedTravelToCellCenter)
 			{
-				if (currentPath.Count - 1 > pathIndex)
+				Travel(unfinishedTravelOrigin, currentPath[pathIndex]);
+			}
+			else
+			{
+				if (currentPath != null)
 				{
-					traveledDistanceBetweenCells += speed * deltatime;
-					EventBus.Raise(new EntityMovedEvent(ID, currentPath[pathIndex].GetCoordinate(),
-						currentPath[pathIndex + 1].GetCoordinate(), traveledDistanceBetweenCells));
+					if (currentPath.Count - 1 > pathIndex)
+						Travel(currentPath[pathIndex], currentPath[pathIndex + 1]);
+				}
+			}
 
-					if (!GetCoordinate.Invoke().Equals(currentPath[pathIndex + 1].GetCoordinate()) &&
-						traveledDistanceBetweenCells >= logicalDistanceBetweenCells.Invoke() / 2.0f)
+			void Travel(TCell origin, TCell destination)
+			{
+				traveledDistanceBetweenCells += speed * deltatime;
+				EventBus.Raise(new EntityMovedEvent(ID, origin.GetCoordinate(),
+					destination.GetCoordinate(), traveledDistanceBetweenCells));
+
+				if (!GetCoordinate.Invoke().Equals(destination.GetCoordinate()) &&
+					traveledDistanceBetweenCells >= logicalDistanceBetweenCells.Invoke() / 2.0f)
+				{
+					SetCoordinate.Invoke(destination.GetCoordinate());
+					EventBus.Raise(new EntityChangeCoordinateEvent(ID,
+						origin.GetCoordinate(),
+						destination.GetCoordinate()));
+
+					if (HasOponents.Invoke())
 					{
-						SetCoordinate.Invoke(currentPath[pathIndex + 1].GetCoordinate());
-						EventBus.Raise(new EntityChangeCoordinateEvent(ID,
-							currentPath[pathIndex].GetCoordinate(),
-							currentPath[pathIndex + 1].GetCoordinate()));
-
-						if (HasOponents.Invoke())
-							FSMTrigger((int)EntityFlags.OnOponentReach);
+						hasUnfinishedTravelToCellCenter = true;
+						unfinishedTravelOrigin = origin;
+						FSMTrigger((int)EntityFlags.OnOponentReach);
 					}
+				}
 
-					if (traveledDistanceBetweenCells >= logicalDistanceBetweenCells.Invoke())
+				if (traveledDistanceBetweenCells >= logicalDistanceBetweenCells.Invoke())
+				{
+					traveledDistanceBetweenCells = 0.0f;
+
+					if (hasUnfinishedTravelToCellCenter)
 					{
-						traveledDistanceBetweenCells = 0.0f;
+						hasUnfinishedTravelToCellCenter = false;
+						unfinishedTravelOrigin = null;
+					}
+					else
+					{
 						pathIndex++;
 					}
 				}
