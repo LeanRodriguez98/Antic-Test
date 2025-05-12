@@ -18,12 +18,21 @@ namespace AnticTest.Architecture.GameLogic
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
 		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
+		private List<uint> selectedAntsId;
+
 		public EntitiesLogic() { }
 
 		public void Init()
 		{
+			selectedAntsId = new List<uint>();
+
 			EventBus.Subscribe<EntityChangeCoordinateEvent>(UpdateCurrentOponents);
+			EventBus.Subscribe<EntityChangeCoordinateEvent>(SelectAnts);
 			EventBus.Subscribe<EntityDestroyEvent>(UpdateCurrentOponents);
+			EventBus.Subscribe<CellSelectedEvent<TCoordinate>>(SetAntsDestination);
+			EventBus.Subscribe<CellSelectedEvent<TCoordinate>>(SelectAnts);
+			EventBus.Subscribe<CellDeselectedEvent>(DeselectAnts);
+
 
 			foreach (Ant<TCell, TCoordinate> ant in EntityRegistry.Ants)
 			{
@@ -63,7 +72,7 @@ namespace AnticTest.Architecture.GameLogic
 				onTickParameters: () => new object[]
 					{
 						ant.HasOponents,
-						false
+						ant.HasDestiny
 					}
 				);
 		}
@@ -87,7 +96,7 @@ namespace AnticTest.Architecture.GameLogic
 			AddMovementState(enemyBug,
 							 new EnemyMovementState<TCell, TCoordinate>(() => Map.Grid,
 							 new EntityPathfinding<TCell, TCoordinate>(enemyBug),
-							 () => Map.DistanceBetweenCells), 
+							 () => Map.DistanceBetweenCells),
 							 (int)EnemyStates.Movement);
 		}
 
@@ -150,73 +159,58 @@ namespace AnticTest.Architecture.GameLogic
 									  (int)EnemyFlags.OnAntReach,
 									  (int)EnemyStates.Fight, () =>
 									  {
-
 									  });
 
 			enemyBug.SetFSMTransition((int)EnemyStates.Fight,
 									  (int)EnemyFlags.OnAntDead,
 									  (int)EnemyStates.Movement, () =>
 									  {
-
 									  });
 
 			enemyBug.SetFSMTransition((int)EnemyStates.Fight,
 									  (int)EnemyFlags.OnAntDesapears,
 									  (int)EnemyStates.Movement, () =>
 									  {
-
 									  });
 		}
 
-		private void RegisterAntTransitions(Ant<TCell, TCoordinate> ant) 
+		private void RegisterAntTransitions(Ant<TCell, TCoordinate> ant)
 		{
 			ant.SetFSMTransition((int)AntStates.Movement,
 								 (int)AntFlags.OnEnemyApproach,
 								 (int)AntStates.Defend, () =>
 								 {
-								 
 								 });
 
 			ant.SetFSMTransition((int)AntStates.Movement,
 								 (int)AntFlags.OnDestinationReach,
 								 (int)AntStates.Patrol, () =>
 								 {
-
+									 ant.RemoveDestiny();
 								 });
 
 			ant.SetFSMTransition((int)AntStates.Patrol,
 								 (int)AntFlags.OnEnemyApproach,
 								 (int)AntStates.Defend, () =>
 								 {
-
 								 });
 
 			ant.SetFSMTransition((int)AntStates.Patrol,
 								 (int)AntFlags.OnMovementOrder,
 								 (int)AntStates.Movement, () =>
 								 {
-									 // set destination
 								 });
 
 			ant.SetFSMTransition((int)AntStates.Defend,
 								 (int)AntFlags.OnEnemyDead,
 								 (int)AntStates.Patrol, () =>
 								 {
-
 								 });
 
 			ant.SetFSMTransition((int)AntStates.Defend,
 								 (int)AntFlags.OnEnemyDesapears,
 								 (int)AntStates.Patrol, () =>
 								 {
-
-								 });
-
-			ant.SetFSMTransition((int)AntStates.Defend,
-								 (int)AntFlags.OnMovementOrder,
-								 (int)AntStates.Movement, () =>
-								 {
-									 // set destination
 								 });
 		}
 
@@ -268,6 +262,31 @@ namespace AnticTest.Architecture.GameLogic
 		{
 			return (combatantA is Ant<TCell, TCoordinate> && combatantB is EnemyBug<TCell, TCoordinate>) ||
 				   (combatantB is Ant<TCell, TCoordinate> && combatantA is EnemyBug<TCell, TCoordinate>);
+		}
+
+		private void SetAntsDestination(CellSelectedEvent<TCoordinate> cellSelectedEvent)
+		{
+			foreach (uint id in selectedAntsId)
+			{
+				(EntityRegistry[id] as Ant<TCell, TCoordinate>).Destiny = cellSelectedEvent.selectedCoordinate;
+			}
+		}
+
+		private void SelectAnts(EntityChangeCoordinateEvent entityChangeCoordinateEvent)
+		{
+			if (entityChangeCoordinateEvent.oldCoordinate.Equals(Map.SelectedCell.GetCoordinate()) ||
+				entityChangeCoordinateEvent.newCoordinate.Equals(Map.SelectedCell.GetCoordinate()))
+				selectedAntsId = Map.GetAllEntitiesIn<Ant<TCell, TCoordinate>>(Map.SelectedCell.GetCoordinate());
+		}
+
+		private void SelectAnts(CellSelectedEvent<TCoordinate> cellSelectedEvent)
+		{
+			selectedAntsId = Map.GetAllEntitiesIn<Ant<TCell, TCoordinate>>(cellSelectedEvent.selectedCoordinate);
+		}
+
+		private void DeselectAnts(CellDeselectedEvent cellDeselectedEvent)
+		{
+			selectedAntsId.Clear();
 		}
 	}
 }

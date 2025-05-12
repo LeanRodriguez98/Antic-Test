@@ -45,6 +45,8 @@ namespace AnticTest.Architecture.GameLogic
 			EventBus.Subscribe<EntityChangeCoordinateEvent>(Move);
 		}
 
+		public TCell SelectedCell => (TCell)grid.SelectedCell;
+
 		private void OnCellSelected(CellSelectedEvent<TCoordinate> cellSelectedEvent)
 		{
 			grid.SetSelectedCell(cellSelectedEvent.selectedCoordinate);
@@ -144,7 +146,9 @@ namespace AnticTest.Architecture.GameLogic
 		{
 			if (!entityType.InheritsFromRawGeneric(typeof(Entity<,>)))
 				throw new InvalidCastException();
-			return entitiesInCoordinate[coordinate][entityType];
+			if (entitiesInCoordinate[coordinate].ContainsKey(entityType))
+				return entitiesInCoordinate[coordinate][entityType];
+			return new List<uint>();
 		}
 	}
 }

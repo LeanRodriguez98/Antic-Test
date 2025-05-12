@@ -21,7 +21,7 @@ namespace AnticTest.Architecture.States
 		{
 			base.TickBehaviours(deltatime, parameters.Add(AntFlags.OnEnemyApproach));
 
-			if (pathIndex >= currentPath.Count)
+			if (pathIndex >= currentPath.Count - 1 && !hasUnfinishedTravelToCellCenter)
 				FSMTrigger((int)AntFlags.OnDestinationReach);
 		}
 	}
