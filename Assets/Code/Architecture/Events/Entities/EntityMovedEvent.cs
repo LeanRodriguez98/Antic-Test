@@ -1,7 +1,7 @@
 ﻿using AnticTest.DataModel.Grid;
 using AnticTest.Systems.Events;
 
-namespace AnticTest.Data.Events
+namespace AnticTest.Architecture.Events
 {
 	public struct EntityMovedEvent : IEvent
 	{

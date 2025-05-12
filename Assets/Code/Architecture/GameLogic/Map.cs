@@ -1,9 +1,12 @@
 using AnticTest.Architecture.Events;
 using AnticTest.Data.Architecture;
+using AnticTest.Data.Events;
+using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
 using AnticTest.Systems.Events;
 using AnticTest.Systems.Provider;
 using System;
+using System.Collections.Generic;
 
 namespace AnticTest.Architecture.GameLogic
 {
@@ -12,9 +15,11 @@ namespace AnticTest.Architecture.GameLogic
 		where TCoordinate : struct, ICoordinate
 	{
 		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+		private EntityRegistry<TCell, TCoordinate> EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry<TCell, TCoordinate>>();
 
 		private Grid<TCell, TCoordinate> grid;
 		private float distanceBetweenCells;
+		private Dictionary<TCoordinate, Dictionary<Type, List<uint>>> entitiesInCoordinate;
 
 		public (int x, int y) Size => grid.GetSize();
 		public float DistanceBetweenCells => distanceBetweenCells;
@@ -23,10 +28,21 @@ namespace AnticTest.Architecture.GameLogic
 		public Map(MapArchitectureData levelData)
 		{
 			grid = new Grid<TCell, TCoordinate>(levelData.Map.width, levelData.Map.height);
-			this.distanceBetweenCells = levelData.LogicalDistanceBetweenCells;
+			distanceBetweenCells = levelData.LogicalDistanceBetweenCells;
+
 			CreateTerrain(levelData);
+
+			entitiesInCoordinate = new Dictionary<TCoordinate, Dictionary<Type, List<uint>>>();
+			foreach (TCell cell in grid.GetGraph())
+			{
+				entitiesInCoordinate.Add(cell.GetCoordinate(), new Dictionary<Type, List<uint>>());
+			}
+
 			EventBus.Subscribe<CellSelectedEvent<TCoordinate>>(OnCellSelected);
 			EventBus.Subscribe<CellDeselectedEvent>(OnCellDeselected);
+			EventBus.Subscribe<EntityCreatedEvent>(RegisterEntity);
+			EventBus.Subscribe<EntityDestroyEvent>(UnregisterEntity);
+			EventBus.Subscribe<EntityChangeCoordinateEvent>(Move);
 		}
 
 		private void OnCellSelected(CellSelectedEvent<TCoordinate> cellSelectedEvent)
@@ -75,6 +91,60 @@ namespace AnticTest.Architecture.GameLogic
 		public bool IsInBorders(TCoordinate coordinate)
 		{
 			return grid.IsValid(coordinate);
+		}
+
+		private void RegisterEntity(EntityCreatedEvent entityCreatedEvent)
+		{
+			RegisterEntity((TCoordinate)entityCreatedEvent.entity.GetCoordinate(),
+				entityCreatedEvent.entity);
+		}
+
+		private void RegisterEntity(TCoordinate coordinate, IEntity entity)
+		{
+			if (!entitiesInCoordinate[coordinate].ContainsKey(entity.GetType()))
+				entitiesInCoordinate[coordinate].Add(entity.GetType(), new List<uint>());
+			entitiesInCoordinate[coordinate][entity.GetType()].Add(entity.GetID());
+		}
+
+		private void UnregisterEntity(EntityDestroyEvent entityDestroyEvent)
+		{
+			UnregisterEntity((TCoordinate)entityDestroyEvent.entity.GetCoordinate(),
+				entityDestroyEvent.entity);
+		}
+
+		private void UnregisterEntity(TCoordinate coordinate, IEntity entity)
+		{
+			entitiesInCoordinate[coordinate][entity.GetType()].Remove(entity.GetID());
+		}
+
+		private void Move(EntityChangeCoordinateEvent entityChangeCoordinateEvent)
+		{
+			Move((TCoordinate)entityChangeCoordinateEvent.oldCoordinate,
+				 (TCoordinate)entityChangeCoordinateEvent.newCoordinate,
+				 EntityRegistry[entityChangeCoordinateEvent.entityId]);
+		}
+
+		private void Move(TCoordinate oldCoordinate, TCoordinate newCoordinate, IEntity entity)
+		{
+			UnregisterEntity(oldCoordinate, entity);
+			RegisterEntity(newCoordinate, entity);
+		}
+
+		public Dictionary<Type, List<uint>> GetAllEntitiesIn(TCoordinate coordinate)
+		{
+			return entitiesInCoordinate[coordinate];
+		}
+
+		public List<uint> GetAllEntitiesIn<TEntity>(TCoordinate coordinate) where TEntity : IEntity
+		{
+			return GetAllEntitiesIn(typeof(TEntity), coordinate);
+		}
+
+		public List<uint> GetAllEntitiesIn(Type entityType, TCoordinate coordinate)
+		{
+			if (!entityType.InheritsFromRawGeneric(typeof(Entity<,>)))
+				throw new InvalidCastException();
+			return entitiesInCoordinate[coordinate][entityType];
 		}
 	}
 }
