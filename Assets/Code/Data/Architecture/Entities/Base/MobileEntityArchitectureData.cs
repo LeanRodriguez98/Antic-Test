@@ -12,11 +12,13 @@ namespace AnticTest.Data.Architecture
 	{
 		[SerializeField] private int speed;
 		[SerializeField] private int health;
+		[SerializeField] private int damage;
+		[SerializeField] private float timeBetweenAtacks;
 		[SerializeField] private Transitability transitability;
 
 		public override object[] GetParameters()
 		{
-			return new object[] { speed, health, transitability };
+			return new object[] { speed, health, damage, timeBetweenAtacks, transitability };
 		}
 	}
 }

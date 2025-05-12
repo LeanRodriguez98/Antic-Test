@@ -11,18 +11,18 @@ namespace AnticTest.Systems.FSM
 		private Dictionary<int, Func<object[]>> behaviourTickParameters;
 		private Dictionary<int, Func<object[]>> behaviourOnEnterParameters;
 		private Dictionary<int, Func<object[]>> behaviourOnExitParameters;
-		private int[,] transitions;
+		private (int destinatinState, Action onTransition)[,] transitions;
 
 		public FSM(int states, int flags)
 		{
 			behaviours = new Dictionary<int, State>();
-			transitions = new int[states, flags];
+			transitions = new (int, Action)[states, flags];
 
 			for (int i = 0; i < states; i++)
 			{
 				for (int j = 0; j < flags; j++)
 				{
-					transitions[i, j] = UNNASSIGNED_TRANSITION;
+					transitions[i, j] = (UNNASSIGNED_TRANSITION, null);
 				}
 			}
 
@@ -36,7 +36,7 @@ namespace AnticTest.Systems.FSM
 		{
 			if (!behaviours.ContainsKey(stateIndex))
 			{
-				state.OnFlag += Transition;
+				state.FSMTrigger += Transition;
 				behaviours.Add(stateIndex, state);
 				behaviourOnEnterParameters.Add(stateIndex, onEnterParameters);
 				behaviourTickParameters.Add(stateIndex, onTickParameters);
@@ -46,60 +46,34 @@ namespace AnticTest.Systems.FSM
 
 		public void ForceState(int state)
 		{
-			if (behaviours.ContainsKey(state))
-			{
-				foreach (Action behaviour in behaviours[currentState].
-					GetOnExitBehaviours(behaviourOnExitParameters[currentState]?.Invoke()))
-				{
-					behaviour?.Invoke();
-				}
-			}
+			if (behaviours.ContainsKey(currentState))
+				behaviours[currentState].ExitBehaviours(behaviourOnExitParameters[currentState]?.Invoke());
 
 			currentState = state;
 
-			foreach (Action behaviour in behaviours[currentState].
-					GetOnEnterBehaviours(behaviourOnEnterParameters[currentState]?.Invoke()))
-			{
-				behaviour?.Invoke();
-			}
+			behaviours[currentState].EnterBehaviours(behaviourOnEnterParameters[currentState]?.Invoke());
 		}
 
-		public void SetTransition(int originState, int flag, int destinationState)
+		public void SetTransition(int originState, int flag, int destinationState, Action onTransition = null)
 		{
-			transitions[originState, flag] = destinationState;
+			transitions[originState, flag] = (destinationState, onTransition);
 		}
 
 		public void Transition(int flag)
 		{
-			if (transitions[currentState, flag] != UNNASSIGNED_TRANSITION)
+			if (transitions[currentState, flag].destinatinState != UNNASSIGNED_TRANSITION)
 			{
-				foreach (Action behaviour in behaviours[currentState].
-					GetOnExitBehaviours(behaviourOnExitParameters[currentState]?.Invoke()))
-				{
-					behaviour?.Invoke();
-				}
-
-				currentState = transitions[currentState, flag];
-
-				foreach (Action behaviour in behaviours[currentState].
-					GetOnEnterBehaviours(behaviourOnEnterParameters[currentState]?.Invoke()))
-				{
-					behaviour?.Invoke();
-				}
-
+				behaviours[currentState].ExitBehaviours(behaviourOnExitParameters[currentState]?.Invoke());
+				transitions[currentState, flag].onTransition?.Invoke();
+				currentState = transitions[currentState, flag].destinatinState;
+				behaviours[currentState].EnterBehaviours(behaviourOnEnterParameters[currentState]?.Invoke());
 			}
 		}
 
 		public void Tick(float deltatime)
 		{
 			if (behaviours.ContainsKey(currentState))
-			{
-				foreach (Action behaviour in behaviours[currentState].
-					GetTickBehaviours(deltatime, behaviourTickParameters[currentState]?.Invoke()))
-				{
-					behaviour?.Invoke();
-				}
-			}
+				behaviours[currentState].TickBehaviours(deltatime, behaviourTickParameters[currentState]?.Invoke());
 		}
 	}
 }

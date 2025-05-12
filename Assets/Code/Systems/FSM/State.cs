@@ -1,13 +1,16 @@
+using AnticTest.Systems.Events;
+using AnticTest.Systems.Provider;
 using System;
-using System.Collections.Generic;
 
 namespace AnticTest.Systems.FSM
 {
 	public abstract class State
 	{
-		public Action<int> OnFlag;
-		public abstract List<Action> GetOnEnterBehaviours(params object[] parameters);
-		public abstract List<Action> GetTickBehaviours(float deltaTime, params object[] parameters);
-		public abstract List<Action> GetOnExitBehaviours(params object[] parameters);
+		protected EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+
+		public Action<int> FSMTrigger;
+		public abstract void EnterBehaviours(params object[] parameters);
+		public abstract void TickBehaviours(float deltaTime, params object[] parameters);
+		public abstract void ExitBehaviours(params object[] parameters);
 	}
 }

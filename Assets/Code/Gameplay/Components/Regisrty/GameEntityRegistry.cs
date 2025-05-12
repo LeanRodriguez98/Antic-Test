@@ -1,4 +1,4 @@
-using AnticTest.Data.Events;
+using AnticTest.Architecture.Events;
 using AnticTest.Gameplay.Events;
 using AnticTest.Gameplay.Utils;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace AnticTest.Gameplay.Components
 			gameEntities = new Dictionary<uint, GameObject>();
 			EventBus.Subscribe<GameEntityCreatedEvent>(OnGameEntityCreated);
 			EventBus.Subscribe<EntityMovedEvent>(OnEntityMoved);
+			EventBus.Subscribe<EntityDestroyEvent>(OnEntityDestroyed);
 		}
 
 		public override void Dispose()
@@ -39,6 +40,12 @@ namespace AnticTest.Gameplay.Components
 		public void OnGameEntityCreated(GameEntityCreatedEvent gameEntityCreatedEvent)
 		{
 			gameEntities.Add(gameEntityCreatedEvent.entityID, gameEntityCreatedEvent.objectInstance);
+		}
+
+		private void OnEntityDestroyed(EntityDestroyEvent entityDestroyEvent)
+		{
+			Destroy(gameEntities[entityDestroyEvent.entity.GetID()]);
+			gameEntities.Remove(entityDestroyEvent.entity.GetID());
 		}
 	}
 }

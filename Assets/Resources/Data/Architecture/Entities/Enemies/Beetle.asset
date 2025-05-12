@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2
   health: 300
+  damage: 10
+  timeBetweenAtacks: 5
   transitability:
     moveToCellTypeCost:
     - cellType: 1

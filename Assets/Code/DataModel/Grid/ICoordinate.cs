@@ -9,5 +9,6 @@
 		public void Set((int x, int y) coordinate);
 		public void Set(ICoordinate coordinate);
 		public int Distance(ICoordinate other);
+		public bool Equals(ICoordinate other);
 	}
 }

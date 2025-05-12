@@ -51,6 +51,11 @@ namespace AnticTest.DataModel.Grid
 				Math.Max(0, diffX - (diffY + 1) / 2) : Math.Max(0, diffX - (diffY) / 2)) + diffY;
 		}
 
+		public bool Equals(ICoordinate other)
+		{
+			return Equals((object)other);
+		}
+
 		public static bool operator ==(Coordinate lhs, Coordinate rhs) => lhs.x == rhs.x && lhs.y == rhs.y;
 
 		public static bool operator !=(Coordinate lhs, Coordinate rhs) => !(lhs == rhs);
