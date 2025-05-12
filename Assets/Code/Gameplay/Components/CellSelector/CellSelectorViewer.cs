@@ -9,15 +9,15 @@ namespace AnticTest.Gameplay.Components
 {
 	public class CellSelectorViewer : UpdatableGameComponent
 	{
-		private const int hexSides = 6;
+		private const int HEX_SIDES = 6;
+		private const float DRAW_ROTATION = 30.0f;
+
 		public float drawRadius = 0.85f;
 		public float drawHeight = 0.1f;
 		public float drawWidth = 0.1f;
-		private float drawRotation = 30.0f;
+		
 		private LineRenderer cellSelectionRenderer;
 		private Coordinate selectedCoordinate;
-
-		private Coordinate InvalidCoordinate => new Coordinate(int.MinValue, int.MinValue);
 
 		public override void Init()
 		{
@@ -40,13 +40,13 @@ namespace AnticTest.Gameplay.Components
 
 		private void OnCellDeselected(CellDeselectedEvent cellDeselectedEvent)
 		{
-			selectedCoordinate = InvalidCoordinate;
+			selectedCoordinate.SetAsInvalid();
 			cellSelectionRenderer.gameObject.SetActive(false);
 		}
 
 		public override void ComponentUpdate(float deltaTime)
 		{
-			if (selectedCoordinate != InvalidCoordinate)
+			if (!selectedCoordinate.InInvalid())
 			{
 				DrawHexa(GridUtils.CoordinateToWorld(selectedCoordinate), cellSelectionRenderer);
 			}
@@ -60,12 +60,12 @@ namespace AnticTest.Gameplay.Components
 			renderer.startWidth = drawWidth;
 			renderer.endWidth = drawWidth;
 
-			for (int i = 0; i < hexSides; i++)
+			for (int i = 0; i < HEX_SIDES; i++)
 			{
-				float angle = ((float)i / hexSides) * 2.0f * Mathf.PI;
+				float angle = ((float)i / HEX_SIDES) * 2.0f * Mathf.PI;
 				float x = Mathf.Cos(angle) * drawRadius;
 				float z = Mathf.Sin(angle) * drawRadius;
-				Vector3 point = Quaternion.Euler(Vector3.up * drawRotation) * new Vector3(x, drawHeight, z);
+				Vector3 point = Quaternion.Euler(Vector3.up * DRAW_ROTATION) * new Vector3(x, drawHeight, z);
 				renderer.SetPosition(i, center + point);
 			}
 		}
@@ -90,7 +90,7 @@ namespace AnticTest.Gameplay.Components
 			lineRenderer.receiveShadows = false;
 			lineRenderer.staticShadowCaster = false;
 			lineRenderer.loop = true;
-			lineRenderer.positionCount = hexSides;
+			lineRenderer.positionCount = HEX_SIDES;
 			container.SetActive(false);
 			return lineRenderer;
 		}

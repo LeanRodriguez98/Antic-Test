@@ -34,9 +34,7 @@ namespace AnticTest.DataModel.Grid
 		{
 			get
 			{
-				TCoordinate invalidCoordinate = new TCoordinate();
-				invalidCoordinate.Set(int.MinValue, int.MinValue);
-				return invalidCoordinate;
+				return (TCoordinate)coordinate.InvalidCoordinate;
 			}
 		}
 

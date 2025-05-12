@@ -23,6 +23,7 @@ namespace AnticTest.DataModel.Entities
 		public MobileEntity(TCoordinate coordinate, uint ID) : base(coordinate, ID)
 		{
 			currentOponents = new List<ICombatant>();
+			destiny.SetAsInvalid();
 		}
 
 		public override void SetCoordinate(TCoordinate coordinate)
@@ -67,6 +68,12 @@ namespace AnticTest.DataModel.Entities
 
 		public int Speed => speed;
 		public TCoordinate Destiny { get => destiny; set => destiny = value; }
+		public bool HasDestiny => !destiny.InInvalid();
+
+		public void RemoveDestiny() 
+		{
+			destiny.SetAsInvalid();
+		}
 
 		public Transitability GetTransitability()
 		{

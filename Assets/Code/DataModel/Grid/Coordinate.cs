@@ -10,6 +10,8 @@ namespace AnticTest.DataModel.Grid
 		public int X => x;
 		public int Y => y;
 
+		public ICoordinate InvalidCoordinate => new Coordinate(int.MinValue, int.MinValue);
+
 		public Coordinate(int x, int y)
 		{
 			this.x = x;
@@ -81,6 +83,16 @@ namespace AnticTest.DataModel.Grid
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(x, y);
+		}
+
+		public void SetAsInvalid()
+		{
+			this = (Coordinate)InvalidCoordinate;
+		}
+
+		public bool InInvalid()
+		{
+			return Equals(InvalidCoordinate);
 		}
 	}
 }
