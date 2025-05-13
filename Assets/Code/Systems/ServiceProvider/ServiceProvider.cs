@@ -17,21 +17,21 @@ namespace AnticTest.Systems.Provider
 			private set => instance = value;
 		}
 
-		private readonly Dictionary<Type, IService> _services = new Dictionary<Type, IService>();
+		private readonly Dictionary<Type, IService> services = new Dictionary<Type, IService>();
 
 		private ServiceProvider() { }
 
 		public void AddService<ServiceType>(IService service) where ServiceType : class, IService
 		{
-			if (!_services.ContainsKey(typeof(ServiceType)))
-				_services.Add(typeof(ServiceType), service);
+			if (!services.ContainsKey(typeof(ServiceType)))
+				services.Add(typeof(ServiceType), service);
 		}
 
 		public bool RemoveService<ServiceType>() where ServiceType : class, IService
 		{
-			if (!_services.ContainsKey(typeof(ServiceType)))
+			if (!services.ContainsKey(typeof(ServiceType)))
 				throw new KeyNotFoundException();
-			return _services.Remove(typeof(ServiceType));
+			return services.Remove(typeof(ServiceType));
 		}
 
 		public object GetService(Type type)
@@ -39,13 +39,18 @@ namespace AnticTest.Systems.Provider
 			if (!typeof(IService).IsAssignableFrom(type))
 				throw new InvalidCastException();
 			IService service;
-			_services.TryGetValue(type, out service);
+			services.TryGetValue(type, out service);
 			return service;
 		}
 
 		public ServiceType GetService<ServiceType>() where ServiceType : class, IService
 		{
 			return GetService(typeof(ServiceType)) as ServiceType;
+		}
+
+		public void ClearAllServices() 
+		{
+			services.Clear();
 		}
 	}
 }

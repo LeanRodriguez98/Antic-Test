@@ -52,13 +52,16 @@ namespace AnticTest.Gameplay.Components
 
         public override void Dispose()
         {
-            cameraInputs.moveInput.Disable();
             cameraInputs.moveInput.performed -= OnMovePerform;
-            cameraInputs.moveInput.performed -= OnMoveCanceled;
+            cameraInputs.moveInput.canceled -= OnMoveCanceled;
+            cameraInputs.moveInput.Disable();
 
-            cameraInputs.rotationInput.Disable();
             cameraInputs.rotationInput.performed -= OnRotationPerform;
             cameraInputs.rotationInput.canceled -= OnRotationCanceled;
+            cameraInputs.rotationInput.Disable();
+
+            cameraInputs.zoomInput.performed -= OnZoomPerform;
+            cameraInputs.zoomInput.Disable();
         }
 
         public override void ComponentUpdate(float deltaTime)

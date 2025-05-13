@@ -642,11 +642,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1057960096 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4066846703446470626, guid: 0c602d86b37a88046ba6dfe73f3287b0, type: 3}
+  m_PrefabInstance: {fileID: 6969181106922803699}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c928d1107a78c846ade577159467c5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1873967673 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8315647979274215353, guid: 6963216c7a12f30488ed8ecdddad3574, type: 3}
   m_PrefabInstance: {fileID: 3022611544132916278}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1873967679 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1740204469168467350, guid: 6963216c7a12f30488ed8ecdddad3574, type: 3}
+  m_PrefabInstance: {fileID: 3022611544132916278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 597720535f720994e8e38d41c67aa55b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2095620613 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5189879034858707071, guid: 4d411bfb4512cfd4d9f86a9a8b8fcb9d, type: 3}
@@ -922,13 +944,17 @@ PrefabInstance:
       value: Game
       objectReference: {fileID: 0}
     - target: {fileID: 6684978477516451482, guid: fc05f75164df90142ae57f551c603e81, type: 3}
+      propertyPath: gameUI
+      value: 
+      objectReference: {fileID: 1873967679}
+    - target: {fileID: 6684978477516451482, guid: fc05f75164df90142ae57f551c603e81, type: 3}
+      propertyPath: gameAudio
+      value: 
+      objectReference: {fileID: 1057960096}
+    - target: {fileID: 6684978477516451482, guid: fc05f75164df90142ae57f551c603e81, type: 3}
       propertyPath: gameCamera
       value: 
       objectReference: {fileID: 2095620613}
-    - target: {fileID: 6684978477516451482, guid: fc05f75164df90142ae57f551c603e81, type: 3}
-      propertyPath: levelToLoad
-      value: 
-      objectReference: {fileID: 11400000, guid: 46cbbab32fe317244bf449e5a7af7950, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

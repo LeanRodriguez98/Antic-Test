@@ -115,6 +115,9 @@ namespace AnticTest.Architecture.GameLogic
 					entities.Remove(entity.GetID());
 			}
 			toDestroy.Clear();
+
+			if (enemies.Count == 0)
+				EventBus.Raise(new AllEnemyEntitiesDestroyedEvent());
 		}
 
 		public void Dispose()

@@ -93,7 +93,7 @@ namespace AnticTest.Architecture.States
 			return traveledDistanceBetweenCells >= logicalDistanceBetweenCells.Invoke();
 		}
 
-		protected void ReachNewCell()
+		protected virtual void ReachNewCell()
 		{
 			traveledDistanceBetweenCells = 0.0f;
 

@@ -11,11 +11,15 @@ namespace AnticTest.Architecture.GameLogic
 	public class GameLogic : IDisposable
 	{
 		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-		private EntityRegistry<Cell<Coordinate>, Coordinate> EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry<Cell<Coordinate>, Coordinate>>();
-		private EntitiesLogic<Cell<Coordinate>, Coordinate> EntitiesLogic => ServiceProvider.Instance.GetService<EntitiesLogic<Cell<Coordinate>, Coordinate>>();
-		private Map<Cell<Coordinate>, Coordinate> Map => ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
+		private EntityRegistry<Cell<Coordinate>, Coordinate> EntityRegistry => 
+			ServiceProvider.Instance.GetService<EntityRegistry<Cell<Coordinate>, Coordinate>>();
+		private EntitiesLogic<Cell<Coordinate>, Coordinate> EntitiesLogic => 
+			ServiceProvider.Instance.GetService<EntitiesLogic<Cell<Coordinate>, Coordinate>>();
+		private Map<Cell<Coordinate>, Coordinate> Map => 
+			ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
 
 		private MapArchitectureData levelData;
+		private WinCondition winCondition;
 
 		public GameLogic(MapArchitectureData levelData)
 		{
@@ -29,6 +33,7 @@ namespace AnticTest.Architecture.GameLogic
 			ServiceProvider.Instance.AddService<EntitiesLogic<Cell<Coordinate>, Coordinate>>
 				(new EntitiesLogic<Cell<Coordinate>, Coordinate>());
 			ServiceProvider.Instance.AddService<EntityFactory>(new EntityFactory());
+			winCondition = new WinCondition();
 		}
 
 		public void InitSimulation()
@@ -52,7 +57,9 @@ namespace AnticTest.Architecture.GameLogic
 			EntityRegistry.Dispose();
 			EntitiesLogic.Dispose();
 			Map.Dispose();
+			winCondition.Dispose();
 			EventBus.ClearAll();
+			ServiceProvider.Instance.ClearAllServices();
 		}
 	}
 }

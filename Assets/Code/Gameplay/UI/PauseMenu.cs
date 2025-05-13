@@ -1,30 +1,29 @@
+using AnticTest.Gameplay.Components;
 using AnticTest.Gameplay.Events;
 using AnticTest.Systems.Events;
-using AnticTest.Systems.Provider;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AnticTest.Gameplay.PauseMenu
+namespace AnticTest.Gameplay.UI
 {
-	public class PauseMenu : MonoBehaviour
+	public class PauseMenu : GameComponent
 	{
-		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-
 		[SerializeField] private GameObject pausePanel;
 		[SerializeField] private Button pauseButton;
 		[SerializeField] private Button resumeButton;
 		[SerializeField] private Button toggleMusicButton;
 		[SerializeField] private Button exitButton;
 
-		void OnEnable()
+		public override void Init()
 		{
+			pausePanel.SetActive(false);
 			pauseButton.onClick.AddListener(Pause);
 			resumeButton.onClick.AddListener(Resume);
 			toggleMusicButton.onClick.AddListener(ToggleMusic);
 			exitButton.onClick.AddListener(Exit);
 		}
 
-		private void OnDisable()
+		public override void Dispose()
 		{
 			pauseButton.onClick.RemoveListener(Pause);
 			resumeButton.onClick.RemoveListener(Resume);
