@@ -24,7 +24,6 @@ namespace AnticTest.Gameplay.PauseMenu
 			exitButton.onClick.AddListener(Exit);
 		}
 
-
 		private void OnDisable()
 		{
 			pauseButton.onClick.RemoveListener(Pause);
@@ -36,11 +35,13 @@ namespace AnticTest.Gameplay.PauseMenu
 		private void Pause()
 		{
 			pausePanel.SetActive(true);
+			Time.timeScale = 0.0f;
 		}
 
 		private void Resume()
 		{
 			pausePanel.SetActive(false);
+			Time.timeScale = 1.0f;
 		}
 
 		private void ToggleMusic()
