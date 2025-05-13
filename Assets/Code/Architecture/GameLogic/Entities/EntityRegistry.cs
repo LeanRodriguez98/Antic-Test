@@ -1,4 +1,5 @@
 ﻿using AnticTest.Architecture.Events;
+using AnticTest.Architecture.Exceptions;
 using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.DataModel.Entities;
@@ -56,6 +57,15 @@ namespace AnticTest.Architecture.GameLogic
 					SpawnEntity(entityArchitectureData, x, y);
 				}
 			}
+
+			if (flag == null)
+				throw new BrokenGameRuleException("There can't be no flag on the map.");
+
+			if (ants.Count == 0)
+				throw new BrokenGameRuleException("There can't be no ants on the map.");
+
+			if (enemies.Count == 0)
+				throw new BrokenGameRuleException("There can't be no enemies on the map.");
 		}
 
 		public void SpawnEntity(ArchitectureData entityArchitectureData, int x, int y)
@@ -69,6 +79,9 @@ namespace AnticTest.Architecture.GameLogic
 			{
 				case FlagArchitectureData:
 					{
+						if (flag != null)
+							throw new BrokenGameRuleException("There cannot be more than one flag on the map.");
+
 						flag = DataBlackboard
 							.GetArchitectureData<FlagArchitectureData>(entityArchitectureData.name)?
 							.Get(spawnCoordinate) as Flag<TCell, TCoordinate>;
@@ -93,7 +106,6 @@ namespace AnticTest.Architecture.GameLogic
 					}
 			}
 		}
-
 
 		private void RemoveEntityFromRegistry(EntityDestroyEvent entityDestroyEvent)
 		{
