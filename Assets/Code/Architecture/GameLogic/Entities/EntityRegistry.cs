@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace AnticTest.Architecture.GameLogic
 {
-	public class EntityRegistry<TCell, TCoordinate> : IService
+	public class EntityRegistry<TCell, TCoordinate> : IService, IDisposable
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
@@ -115,6 +115,11 @@ namespace AnticTest.Architecture.GameLogic
 					entities.Remove(entity.GetID());
 			}
 			toDestroy.Clear();
+		}
+
+		public void Dispose()
+		{
+			EventBus.Unsubscribe<EntityDestroyEvent>(RemoveEntityFromRegistry);
 		}
 	}
 }

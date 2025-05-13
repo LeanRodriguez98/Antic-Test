@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace AnticTest.Architecture.GameLogic
 {
-	class CombatFinder<TCell, TCoordinate>
+	class CombatFinder<TCell, TCoordinate> : IDisposable
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
@@ -70,6 +70,12 @@ namespace AnticTest.Architecture.GameLogic
 		{
 			return (combatantA is Ant<TCell, TCoordinate> && combatantB is EnemyBug<TCell, TCoordinate>) ||
 				   (combatantB is Ant<TCell, TCoordinate> && combatantA is EnemyBug<TCell, TCoordinate>);
+		}
+
+		public void Dispose()
+		{
+			EventBus.Unsubscribe<EntityChangeCoordinateEvent>(UpdateCurrentOponents);
+			EventBus.Unsubscribe<EntityDestroyEvent>(UpdateCurrentOponents);
 		}
 	}
 }

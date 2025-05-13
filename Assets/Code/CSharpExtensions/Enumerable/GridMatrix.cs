@@ -18,7 +18,7 @@ namespace System.Collections.Generic
 
 		public void Resize(int newWidth, int newHeight, T defaultValue = default)
 		{
-			var newData = new List<T>(newWidth * newHeight);
+			List<T> newData = new List<T>(newWidth * newHeight);
 			for (int y = 0; y < newHeight; y++)
 			{
 				for (int x = 0; x < newWidth; x++)

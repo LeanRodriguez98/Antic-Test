@@ -47,10 +47,10 @@ namespace System.Collections.Generic
 
 		public static IEnumerable<T> Concat<T>(IEnumerable<T> first, IEnumerable<T> second)
 		{
-			foreach (var item in first)
+			foreach (T item in first)
 				yield return item;
 
-			foreach (var item in second)
+			foreach (T item in second)
 				yield return item;
 		}
 

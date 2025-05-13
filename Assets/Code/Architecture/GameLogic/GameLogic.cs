@@ -4,13 +4,16 @@ using AnticTest.Data.Entities.Factory;
 using AnticTest.DataModel.Grid;
 using AnticTest.Systems.Events;
 using AnticTest.Systems.Provider;
+using System;
 
 namespace AnticTest.Architecture.GameLogic
 {
-	public class GameLogic
+	public class GameLogic : IDisposable
 	{
+		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 		private EntityRegistry<Cell<Coordinate>, Coordinate> EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry<Cell<Coordinate>, Coordinate>>();
 		private EntitiesLogic<Cell<Coordinate>, Coordinate> EntitiesLogic => ServiceProvider.Instance.GetService<EntitiesLogic<Cell<Coordinate>, Coordinate>>();
+		private Map<Cell<Coordinate>, Coordinate> Map => ServiceProvider.Instance.GetService<Map<Cell<Coordinate>, Coordinate>>();
 
 		private MapArchitectureData levelData;
 
@@ -42,6 +45,14 @@ namespace AnticTest.Architecture.GameLogic
 		public void PostUpdate() 
 		{
 			EntityRegistry.RemoveDestroyedEntites();
+		}
+
+		public void Dispose()
+		{
+			EntityRegistry.Dispose();
+			EntitiesLogic.Dispose();
+			Map.Dispose();
+			EventBus.ClearAll();
 		}
 	}
 }

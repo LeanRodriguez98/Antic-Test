@@ -22,6 +22,7 @@ namespace AnticTest.Gameplay.Components
 		{
 			EventBus.Unsubscribe<GameEntityCreatedEvent>(OnGameEntityCreated);
 			EventBus.Unsubscribe<EntityMovedEvent>(OnEntityMoved);
+			EventBus.Unsubscribe<EntityDestroyEvent>(OnEntityDestroyed);
 		}
 
 		private void OnEntityMoved(EntityMovedEvent entityMovedEvent)

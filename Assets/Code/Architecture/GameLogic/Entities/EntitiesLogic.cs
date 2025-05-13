@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace AnticTest.Architecture.GameLogic
 {
-	public class EntitiesLogic<TCell, TCoordinate> : IService
+	public class EntitiesLogic<TCell, TCoordinate> : IService, IDisposable
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
@@ -20,7 +20,6 @@ namespace AnticTest.Architecture.GameLogic
 		private EntityRegistry<TCell, TCoordinate> EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry<TCell, TCoordinate>>();
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
 		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-
 
 		private CombatFinder<TCell, TCoordinate> combatFinder;
 
@@ -234,6 +233,13 @@ namespace AnticTest.Architecture.GameLogic
 			strategies[antsCurrentStrategy].Disable();
 			antsCurrentStrategy = swapAntsStrategyEvent.strategyToSwap;
 			strategies[antsCurrentStrategy].Enable();
+		}
+
+		public void Dispose()
+		{
+			strategies[antsCurrentStrategy].Disable();
+			EventBus.Unsubscribe<SwapAntsStrategyEvent>(SwapAntsStrategy);
+			combatFinder.Dispose();
 		}
 
 		public Dictionary<AntStrategies, IAntsStrategy> Strategies => strategies;

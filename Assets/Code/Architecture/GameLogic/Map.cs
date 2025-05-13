@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace AnticTest.Architecture.GameLogic
 {
-	public class Map<TCell, TCoordinate> : IService
+	public class Map<TCell, TCoordinate> : IService, IDisposable
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
@@ -150,6 +150,15 @@ namespace AnticTest.Architecture.GameLogic
 			if (entitiesInCoordinate[coordinate].ContainsKey(entityType))
 				return entitiesInCoordinate[coordinate][entityType];
 			return new List<uint>();
+		}
+
+		public void Dispose()
+		{
+			EventBus.Unsubscribe<CellSelectedEvent<TCoordinate>>(OnCellSelected);
+			EventBus.Unsubscribe<CellDeselectedEvent>(OnCellDeselected);
+			EventBus.Unsubscribe<EntityCreatedEvent>(RegisterEntity);
+			EventBus.Unsubscribe<EntityDestroyEvent>(UnregisterEntity);
+			EventBus.Unsubscribe<EntityChangeCoordinateEvent>(Move);
 		}
 	}
 }
