@@ -103,7 +103,7 @@ namespace AnticTest.Gameplay.Components
             Vector3 forward = ProjectDirectionOnPlane(cinemachineBrain.transform.forward, Vector3.up);
             Vector3 right = ProjectDirectionOnPlane(cinemachineBrain.transform.right, Vector3.up);
 
-            Vector3 mousePosition = Input.mousePosition;
+            Vector3 mousePosition = Mouse.current.position.ReadValue();
 
             Vector3 movement = Vector3.zero;
 
