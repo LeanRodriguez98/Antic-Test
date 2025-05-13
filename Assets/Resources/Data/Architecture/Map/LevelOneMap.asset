@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: LevelOneMap
   m_EditorClassIdentifier: 
   mapSize: {x: 15, y: 15}
+  logicalDistanceBetweenCells: 10
   cellsInMap:
   - cellArchitectureData: {fileID: 11400000, guid: a2a828eaeb689984a838d2220ccbb7a3, type: 2}
     representativeColor: {r: 0.008663814, g: 0.42857128, b: 0.04529233, a: 1}
@@ -42,7 +43,7 @@ MonoBehaviour:
     - cellArchitectureData: {fileID: 11400000, guid: df6abf26a7fc08f499b40e7a6fd32a87, type: 2}
       entityArchitectureData: {fileID: 0}
     - cellArchitectureData: {fileID: 11400000, guid: df6abf26a7fc08f499b40e7a6fd32a87, type: 2}
-      entityArchitectureData: {fileID: 0}
+      entityArchitectureData: {fileID: 11400000, guid: 8290746111788c04c8a58f66121b1b61, type: 2}
     - cellArchitectureData: {fileID: 11400000, guid: df6abf26a7fc08f499b40e7a6fd32a87, type: 2}
       entityArchitectureData: {fileID: 0}
     - cellArchitectureData: {fileID: 11400000, guid: df6abf26a7fc08f499b40e7a6fd32a87, type: 2}
