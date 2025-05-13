@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8069afccac7046b4eac6ed6384d81b75, type: 3}
   m_Name: AntsIAConfiguration
   m_EditorClassIdentifier: 
-  useIAByDefault: 0
-  rangeToDefend: 0
-  enemyDistaneWeightMultiplier: 0
-  enemyHealthWeightMultiplier: 0
-  enemyDamageWeightMultiplier: 0
-  enemySpeedWeightMultiplier: 0
+  useIAByDefault: 1
+  rangeToDefend: 5
+  enemyDistaneWeightMultiplier: 2
+  enemyHealthWeightMultiplier: 1
+  enemyDamageWeightMultiplier: 1
+  enemySpeedWeightMultiplier: 1

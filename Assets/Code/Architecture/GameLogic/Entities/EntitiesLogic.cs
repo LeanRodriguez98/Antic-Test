@@ -1,9 +1,11 @@
-﻿using AnticTest.Architecture.GameLogic.Strategies;
+﻿using AnticTest.Architecture.Events;
+using AnticTest.Architecture.GameLogic.Strategies;
 using AnticTest.Architecture.Pathfinding;
 using AnticTest.Architecture.States;
 using AnticTest.Data.Blackboard;
 using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
+using AnticTest.Systems.Events;
 using AnticTest.Systems.Provider;
 using System;
 using System.Collections.Generic;
@@ -17,22 +19,25 @@ namespace AnticTest.Architecture.GameLogic
 		private DataBlackboard DataBlackboard => ServiceProvider.Instance.GetService<DataBlackboard>();
 		private EntityRegistry<TCell, TCoordinate> EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry<TCell, TCoordinate>>();
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
+		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
 		private CombatFinder<TCell, TCoordinate> combatFinder;
 
-		private Dictionary<Type, IAntsStrategy> strategies;
-		private Type antsCurrentStrategyType;
+		private Dictionary<AntStrategies, IAntsStrategy> strategies;
+		private AntStrategies antsCurrentStrategy;
 
 		public EntitiesLogic()
 		{
 			if (DataBlackboard.AntsIAConfiguration.UseIAByDefault)
-				antsCurrentStrategyType = typeof(AntsIAStrategy<TCell, TCoordinate>);
+				antsCurrentStrategy = AntStrategies.IA;
 			else
-				antsCurrentStrategyType = typeof(AntsManualStrategy<TCell, TCoordinate>);
+				antsCurrentStrategy = AntStrategies.Manual;
 		}
 
 		public void Init()
 		{
+			EventBus.Subscribe<SwapAntsStrategyEvent>(SwapAntsStrategy);
+
 			combatFinder = new CombatFinder<TCell, TCoordinate>();
 
 			foreach (Ant<TCell, TCoordinate> ant in EntityRegistry.Ants)
@@ -55,16 +60,16 @@ namespace AnticTest.Architecture.GameLogic
 				enemyBug.StartFSM((int)EnemyStates.Movement);
 			}
 
-			strategies = new Dictionary<Type, IAntsStrategy>();
-			strategies.Add(typeof(AntsManualStrategy<TCell, TCoordinate>), new AntsManualStrategy<TCell, TCoordinate>());
-			strategies.Add(typeof(AntsIAStrategy<TCell, TCoordinate>), new AntsIAStrategy<TCell, TCoordinate>());
+			strategies = new Dictionary<AntStrategies, IAntsStrategy>();
+			strategies.Add(AntStrategies.IA, new AntsIAStrategy<TCell, TCoordinate>());
+			strategies.Add(AntStrategies.Manual, new AntsManualStrategy<TCell, TCoordinate>());
 
-			strategies[antsCurrentStrategyType].Enable();
+			strategies[antsCurrentStrategy].Enable();
 		}
 
 		public void Update(float deltaTime)
 		{
-			strategies[antsCurrentStrategyType].Update();
+			strategies[antsCurrentStrategy].Update();
 
 			foreach (IEntity entity in EntityRegistry.Entities)
 			{
@@ -221,6 +226,13 @@ namespace AnticTest.Architecture.GameLogic
 								 (int)AntStates.Patrol, () =>
 								 {
 								 });
+		}
+
+		private void SwapAntsStrategy(SwapAntsStrategyEvent swapAntsStrategyEvent)
+		{
+			strategies[antsCurrentStrategy].Disable();
+			antsCurrentStrategy = swapAntsStrategyEvent.strategyToSwap;
+			strategies[antsCurrentStrategy].Enable();
 		}
 	}
 }

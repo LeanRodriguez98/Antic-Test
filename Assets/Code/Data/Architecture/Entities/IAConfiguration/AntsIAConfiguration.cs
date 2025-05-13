@@ -2,7 +2,7 @@
 
 namespace AnticTest.Data.Architecture
 {
-	[CreateAssetMenu(fileName = "New Ant IA Configuration", menuName = "AnticTest/Data/Architecture/AntsIAConfiguration")]
+	[CreateAssetMenu(fileName = "New Ants IA Configuration", menuName = "AnticTest/Data/Architecture/AntsIAConfiguration")]
 	public class AntsIAConfiguration : ScriptableObject
 	{
 		[SerializeField] private bool useIAByDefault;
