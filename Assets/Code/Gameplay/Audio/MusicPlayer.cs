@@ -1,20 +1,18 @@
+using AnticTest.Gameplay.Components;
 using AnticTest.Gameplay.Events;
 using AnticTest.Systems.Events;
-using AnticTest.Systems.Provider;
 using System;
 using UnityEngine;
 
 namespace AnticTest.Gameplay.Audio
 {
 	[RequireComponent(typeof(AudioSource))]
-	public class MusicPlayer : MonoBehaviour
+	public class MusicPlayer : GameComponent
 	{
-		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-
 		[SerializeField] [Range(0.0f, 1.0f)] private float volume = 1.0f;
 		private AudioSource audioSource;
 
-		private void Start()
+		public override void Init()
 		{
 			EventBus.Subscribe<ToggleMusicEvent>(ToggleMusic);
 
@@ -28,7 +26,7 @@ namespace AnticTest.Gameplay.Audio
 			audioSource.Play();
 		}
 
-		private void OnDisable()
+		public override void Dispose()
 		{
 			EventBus.Unsubscribe<ToggleMusicEvent>(ToggleMusic);
 		}

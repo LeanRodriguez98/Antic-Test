@@ -1,6 +1,8 @@
 using AnticTest.Architecture.GameLogic;
 using AnticTest.Data.Architecture;
+using AnticTest.Gameplay.Audio;
 using AnticTest.Gameplay.Components;
+using AnticTest.Gameplay.UI;
 using UnityEngine;
 
 namespace AnticTest.Gameplay
@@ -18,6 +20,8 @@ namespace AnticTest.Gameplay
 
 		private GameLogic gameLogic;
 
+		[SerializeField] private GameUI gameUI;
+		[SerializeField] private GameAudio gameAudio;
 		[SerializeField] private GameCamera gameCamera;
 		[SerializeField] private MapArchitectureData levelToLoad;
 
@@ -33,6 +37,8 @@ namespace AnticTest.Gameplay
 			inputReader = GetComponent<CellSelector>();
 			inputReader.Init();
 			gameCamera.Init();
+			gameUI.Init();
+			gameAudio.Init();
 			gameLogic.InitSimulation();
 		}
 
@@ -54,6 +60,10 @@ namespace AnticTest.Gameplay
 			gameEntityRegistry.Dispose();
 			gameMap.Dispose();
 			gameCamera.Dispose();
+			inputReader.Dispose();
+			gameUI.Dispose();
+			gameAudio.Dispose();
+			gameLogic.Dispose();
 		}
 	}
 }

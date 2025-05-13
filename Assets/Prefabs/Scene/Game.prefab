@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6390107800857884370}
   - component: {fileID: 3912749405187236261}
   - component: {fileID: 6773609302014508145}
+  - component: {fileID: 8160463724990763350}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -49,6 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93ed9559dcd9ab84c96acfe8d57cffdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameUI: {fileID: 0}
+  gameAudio: {fileID: 0}
   gameCamera: {fileID: 0}
   levelToLoad: {fileID: 11400000, guid: 46cbbab32fe317244bf449e5a7af7950, type: 2}
 --- !u!156049354 &3554817913864906457
@@ -112,3 +115,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 856de9e6da36c094494f5dc759d7bec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8160463724990763350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6678597559954317435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19446bbf495ab1441aa5ae4bb143e3a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawRadius: 0.85
+  drawHeight: 0.1
+  drawWidth: 0.1
