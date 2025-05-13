@@ -68,8 +68,8 @@ namespace AnticTest.Architecture.States
 
 				if (ShouldChangeCell(GetCoordinate.Invoke(), destination.GetCoordinate()))
 					ChangeCell(origin.GetCoordinate(), destination.GetCoordinate(), ID, SetCoordinate);
-				
-				CheckForEnemies(HasOponents, origin, enemyTransitionFlag);
+
+				CheckForEnemies(HasOponents, enemyTransitionFlag);
 
 				if (FinishedStep())
 					ReachNewCell();
@@ -98,14 +98,9 @@ namespace AnticTest.Architecture.States
 			traveledDistanceBetweenCells = 0.0f;
 
 			if (hasUnfinishedTravelToCellCenter)
-			{
 				hasUnfinishedTravelToCellCenter = false;
-				unfinishedTravelOrigin = null;
-			}
 			else
-			{
 				pathIndex++;
-			}
 		}
 
 		protected bool ShouldChangeCell(TCoordinate currentCoordinate, TCoordinate reachCoordinate)
@@ -116,16 +111,16 @@ namespace AnticTest.Architecture.States
 
 		protected void ChangeCell(TCoordinate origin, TCoordinate destination, uint ID, Action<TCoordinate> SetCoordinate)
 		{
+			unfinishedTravelOrigin = currentPath[pathIndex];
 			SetCoordinate.Invoke(destination);
 			EventBus.Raise(new EntityChangeCoordinateEvent(ID, origin, destination));
 		}
 
-		protected void CheckForEnemies(Func<bool> HasOponents, TCell unfinishedOrigin, int enemyTransition)
+		protected void CheckForEnemies(Func<bool> HasOponents, int enemyTransition)
 		{
 			if (HasOponents.Invoke())
 			{
 				hasUnfinishedTravelToCellCenter = true;
-				unfinishedTravelOrigin = unfinishedOrigin;
 				FSMTrigger(enemyTransition);
 			}
 		}
