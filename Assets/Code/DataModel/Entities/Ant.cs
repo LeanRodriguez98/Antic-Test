@@ -12,5 +12,10 @@ namespace AnticTest.DataModel.Entities
 		{
 			base.SetParameters(parameters);
 		}
+
+		public int GetFSMState() 
+		{
+			return fsm.currentState;
+		}
 	}
 }

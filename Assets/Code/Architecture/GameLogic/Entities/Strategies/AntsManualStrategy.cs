@@ -32,6 +32,10 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 				SelectEntities(Map.SelectedCell.GetCoordinate());
 		}
 
+		public void Update()
+		{
+		}
+
 		public void Disable()
 		{
 			EventBus.Unsubscribe<EntityChangeCoordinateEvent>(SelectAnts);

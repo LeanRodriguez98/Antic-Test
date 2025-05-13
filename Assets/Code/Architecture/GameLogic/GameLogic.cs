@@ -1,4 +1,5 @@
-﻿using AnticTest.Data.Architecture;
+﻿using AnticTest.Architecture.GameLogic.Strategies;
+using AnticTest.Data.Architecture;
 using AnticTest.Data.Blackboard;
 using AnticTest.Data.Entities.Factory;
 using AnticTest.DataModel.Grid;
@@ -19,9 +20,12 @@ namespace AnticTest.Architecture.GameLogic
 			this.levelData = levelData;
 			ServiceProvider.Instance.AddService<DataBlackboard>(new DataBlackboard());
 			ServiceProvider.Instance.AddService<EventBus>(new EventBus());
-			ServiceProvider.Instance.AddService<Map<Cell<Coordinate>, Coordinate>>(new Map<Cell<Coordinate>, Coordinate>(levelData));
-			ServiceProvider.Instance.AddService<EntityRegistry<Cell<Coordinate>, Coordinate>>(new EntityRegistry<Cell<Coordinate>, Coordinate>());
-			ServiceProvider.Instance.AddService<EntitiesLogic<Cell<Coordinate>, Coordinate>>(new EntitiesLogic<Cell<Coordinate>, Coordinate>());
+			ServiceProvider.Instance.AddService<Map<Cell<Coordinate>, Coordinate>>
+				(new Map<Cell<Coordinate>, Coordinate>(levelData));
+			ServiceProvider.Instance.AddService<EntityRegistry<Cell<Coordinate>, Coordinate>>
+				(new EntityRegistry<Cell<Coordinate>, Coordinate>());
+			ServiceProvider.Instance.AddService<EntitiesLogic<Cell<Coordinate>, Coordinate>>
+				(new EntitiesLogic<Cell<Coordinate>, Coordinate>(typeof(AntsIAStrategy<Cell<Coordinate>, Coordinate>)));
 			ServiceProvider.Instance.AddService<EntityFactory>(new EntityFactory());
 		}
 

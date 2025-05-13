@@ -17,16 +17,18 @@ namespace AnticTest.Architecture.GameLogic
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
 
 		private CombatFinder<TCell, TCoordinate> combatFinder;
-		private IAntsStrategy antsStrategy;
 
-		public EntitiesLogic() { }
+		private Dictionary<Type, IAntsStrategy> strategies;
+		private Type antsCurrentStrategyType;
+
+		public EntitiesLogic(Type defaultAntStrategyType)
+		{
+			antsCurrentStrategyType = defaultAntStrategyType;
+		}
 
 		public void Init()
 		{
 			combatFinder = new CombatFinder<TCell, TCoordinate>();
-
-			antsStrategy = new AntsManualStrategy<TCell, TCoordinate>();
-			antsStrategy.Enable();
 
 			foreach (Ant<TCell, TCoordinate> ant in EntityRegistry.Ants)
 			{
@@ -47,10 +49,18 @@ namespace AnticTest.Architecture.GameLogic
 				RegisterEnemyTransitions(enemyBug);
 				enemyBug.StartFSM((int)EnemyStates.Movement);
 			}
+
+			strategies = new Dictionary<Type, IAntsStrategy>();
+			strategies.Add(typeof(AntsManualStrategy<TCell, TCoordinate>), new AntsManualStrategy<TCell, TCoordinate>());
+			strategies.Add(typeof(AntsIAStrategy<TCell, TCoordinate>), new AntsIAStrategy<TCell, TCoordinate>(5));
+
+			strategies[antsCurrentStrategyType].Enable();
 		}
 
 		public void Update(float deltaTime)
 		{
+			strategies[antsCurrentStrategyType].Update();
+
 			foreach (IEntity entity in EntityRegistry.Entities)
 			{
 				entity.Update(deltaTime);

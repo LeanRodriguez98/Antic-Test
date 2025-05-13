@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ladybug
   m_EditorClassIdentifier: 
   speed: 5
-  health: 50
+  health: 2
   damage: 7
   timeBetweenAtacks: 2
   transitability:
