@@ -21,11 +21,11 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
 		private TCoordinate FlagCoordinate => (TCoordinate)EntityRegistry.Flag.GetCoordinate();
+
+
 		private Dictionary<uint, List<TCoordinate>> distancesToFlag;
 
 		private List<uint> potentialThreats;
-		private Dictionary<uint, bool> hasSomeAntAssigned;
-
 		private List<uint> patrolingAnts;
 
 		private float enemyDistanceWeightMultiplier;
@@ -45,7 +45,6 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 			rangeToDefend = DataBlackboard.AntsIAConfiguration.RangeToDefend;
 
 			potentialThreats = new List<uint>();
-			hasSomeAntAssigned = new Dictionary<uint, bool>();
 
 			distancesToFlag = new Dictionary<uint, List<TCoordinate>>();
 			for (uint i = 1; i <= rangeToDefend; i++)
@@ -101,10 +100,11 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 				foreach (TCoordinate coordinate in distanceToFlag.Value)
 				{
 					List<uint> enemiesInCoordinate = Map.GetAllEntitiesIn<EnemyBug<TCell, TCoordinate>>(coordinate);
-					float cellThreat = enemiesInCoordinate.Count * enemyDistanceWeightMultiplier;
+					float cellThreat = 0.0f; 
 					foreach (uint enemyId in enemiesInCoordinate)
 					{
 						MobileEntity<TCell, TCoordinate> enemy = (EnemyBug<TCell, TCoordinate>)EntityRegistry[enemyId];
+						cellThreat += distanceToFlag.Key * enemyDistanceWeightMultiplier;
 						cellThreat += enemy.Health * enemyHealthWeightMultiplier;
 						cellThreat += enemy.Damage * enemyDamageWeightMultiplier;
 						cellThreat += enemy.Speed * enemySpeedWeightMultiplier;
@@ -117,17 +117,9 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 					potentialThreats.AddRange(enemies.enemiesId);
 				}
 			}
-
-			foreach (uint enemyID in potentialThreats)
-			{
-				if (!hasSomeAntAssigned.ContainsKey(enemyID))
-					hasSomeAntAssigned.Add(enemyID, false);
-				else
-					hasSomeAntAssigned[enemyID] = false;
-			}
 		}
 
-		private void FindPatrolingAnts() 
+		private void FindPatrolingAnts()
 		{
 			patrolingAnts.Clear();
 			foreach (Ant<TCell, TCoordinate> ant in EntityRegistry.Ants)
@@ -154,10 +146,11 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 
 		private void AssingAnt(uint enemyId)
 		{
-			hasSomeAntAssigned[enemyId] = true;
 			Ant<TCell, TCoordinate> ant = (Ant<TCell, TCoordinate>)EntityRegistry[patrolingAnts[0]];
 			ant.Destiny = (TCoordinate)EntityRegistry[enemyId].GetCoordinate();
 			patrolingAnts.RemoveAt(0);
 		}
+
+		public List<uint> PotentialThreats => potentialThreats;
 	}
 }

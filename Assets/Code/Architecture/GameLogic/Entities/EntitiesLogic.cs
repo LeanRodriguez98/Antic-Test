@@ -21,6 +21,7 @@ namespace AnticTest.Architecture.GameLogic
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
 		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
+
 		private CombatFinder<TCell, TCoordinate> combatFinder;
 
 		private Dictionary<AntStrategies, IAntsStrategy> strategies;
@@ -234,5 +235,8 @@ namespace AnticTest.Architecture.GameLogic
 			antsCurrentStrategy = swapAntsStrategyEvent.strategyToSwap;
 			strategies[antsCurrentStrategy].Enable();
 		}
+
+		public Dictionary<AntStrategies, IAntsStrategy> Strategies => strategies;
+		public AntStrategies AntsCurrentStrategy => antsCurrentStrategy;
 	}
 }
