@@ -1,4 +1,8 @@
-namespace System.Collections.Generic
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace CSharpExtensions.GridMatrix
 {
 	[Serializable]
 	public class GridMatrix<T>: IEnumerable<T>
