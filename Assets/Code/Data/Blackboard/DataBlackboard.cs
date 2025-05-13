@@ -25,6 +25,8 @@ namespace AnticTest.Data.Blackboard
 		private SelectionInputs selectionInputs;
 		private CameraInputs cameraInputs;
 
+		private AntsIAConfiguration antsIAConfiguration;
+
 		public DataBlackboard()
 		{
 			architectureDatas = new Dictionary<Type, List<ArchitectureData>>();
@@ -32,6 +34,7 @@ namespace AnticTest.Data.Blackboard
 			LoadData(ref architectureDatas);
 			LoadData(ref gameplayDatas);
 			LoadEntityPrefabsFromData();
+			LoadConfigurationData();
 			LoadInputsData();
 		}
 
@@ -51,15 +54,22 @@ namespace AnticTest.Data.Blackboard
 
 		private void LoadInputsData()
 		{
-			SelectionInputs[] selectionInputsDatas = Resources.LoadAll<SelectionInputs>(RESOURCES_DATA_FOLDER);
-			if (selectionInputsDatas == null || selectionInputsDatas.Length == 0)
-				throw new MissingDataException("No 'SelectionInputs' asset found in 'Resources/" + RESOURCES_DATA_FOLDER + "' folder.");
-			selectionInputs = selectionInputsDatas[0];
+			LoadScriptableObject(out selectionInputs);
+			LoadScriptableObject(out cameraInputs);
+		}
 
-			CameraInputs[] cameraInputsDatas = Resources.LoadAll<CameraInputs>(RESOURCES_DATA_FOLDER);
-			if (cameraInputsDatas == null || cameraInputsDatas.Length == 0)
-				throw new MissingDataException("No 'CameraInputs' asset found in 'Resources/" + RESOURCES_DATA_FOLDER + "' folder.");
-			cameraInputs = cameraInputsDatas[0];
+		private void LoadConfigurationData() 
+		{
+			LoadScriptableObject(out antsIAConfiguration);
+		}
+
+		private void LoadScriptableObject<TData>(out TData loadedData)
+			where TData : ScriptableObject
+		{
+			TData[] data = Resources.LoadAll<TData>(RESOURCES_DATA_FOLDER);
+			if (data == null || data.Length == 0)
+				throw new MissingDataException("No '" + typeof(TData).Name + "' asset found in 'Resources/" + RESOURCES_DATA_FOLDER + "' folder.");
+			loadedData = data[0];
 		}
 
 		private void LoadEntityPrefabsFromData()
@@ -144,5 +154,6 @@ namespace AnticTest.Data.Blackboard
 
 		public SelectionInputs SelectionInputs => selectionInputs;
 		public CameraInputs CameraInputs => cameraInputs;
+		public AntsIAConfiguration AntsIAConfiguration => antsIAConfiguration;
 	}
 }

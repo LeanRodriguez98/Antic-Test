@@ -1,6 +1,7 @@
 ﻿using AnticTest.Architecture.GameLogic.Strategies;
 using AnticTest.Architecture.Pathfinding;
 using AnticTest.Architecture.States;
+using AnticTest.Data.Blackboard;
 using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
 using AnticTest.Systems.Provider;
@@ -13,6 +14,7 @@ namespace AnticTest.Architecture.GameLogic
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
+		private DataBlackboard DataBlackboard => ServiceProvider.Instance.GetService<DataBlackboard>();
 		private EntityRegistry<TCell, TCoordinate> EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry<TCell, TCoordinate>>();
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
 
@@ -21,9 +23,12 @@ namespace AnticTest.Architecture.GameLogic
 		private Dictionary<Type, IAntsStrategy> strategies;
 		private Type antsCurrentStrategyType;
 
-		public EntitiesLogic(Type defaultAntStrategyType)
+		public EntitiesLogic()
 		{
-			antsCurrentStrategyType = defaultAntStrategyType;
+			if (DataBlackboard.AntsIAConfiguration.UseIAByDefault)
+				antsCurrentStrategyType = typeof(AntsIAStrategy<TCell, TCoordinate>);
+			else
+				antsCurrentStrategyType = typeof(AntsManualStrategy<TCell, TCoordinate>);
 		}
 
 		public void Init()
@@ -52,7 +57,7 @@ namespace AnticTest.Architecture.GameLogic
 
 			strategies = new Dictionary<Type, IAntsStrategy>();
 			strategies.Add(typeof(AntsManualStrategy<TCell, TCoordinate>), new AntsManualStrategy<TCell, TCoordinate>());
-			strategies.Add(typeof(AntsIAStrategy<TCell, TCoordinate>), new AntsIAStrategy<TCell, TCoordinate>(5));
+			strategies.Add(typeof(AntsIAStrategy<TCell, TCoordinate>), new AntsIAStrategy<TCell, TCoordinate>());
 
 			strategies[antsCurrentStrategyType].Enable();
 		}

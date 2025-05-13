@@ -1,6 +1,7 @@
 ﻿using AnticTest.Architecture.Events;
 using AnticTest.Architecture.States;
 using AnticTest.Architecture.Utils;
+using AnticTest.Data.Blackboard;
 using AnticTest.Data.Events;
 using AnticTest.DataModel.Entities;
 using AnticTest.DataModel.Grid;
@@ -14,6 +15,7 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 		where TCell : class, ICell<TCoordinate>, new()
 		where TCoordinate : struct, ICoordinate
 	{
+		private DataBlackboard DataBlackboard => ServiceProvider.Instance.GetService<DataBlackboard>();
 		private Map<TCell, TCoordinate> Map => ServiceProvider.Instance.GetService<Map<TCell, TCoordinate>>();
 		private EntityRegistry<TCell, TCoordinate> EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry<TCell, TCoordinate>>();
 		private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
@@ -26,13 +28,27 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 
 		private List<uint> patrolingAnts;
 
-		public AntsIAStrategy(uint distanceToDefend)
+		private float enemyDistanceWeightMultiplier;
+		private float enemyHealthWeightMultiplier;
+		private float enemyDamageWeightMultiplier;
+		private float enemySpeedWeightMultiplier;
+
+		private uint rangeToDefend;
+
+		public AntsIAStrategy()
 		{
+			enemyDistanceWeightMultiplier = DataBlackboard.AntsIAConfiguration.EnemyDistanceWeightMultiplier;
+			enemyHealthWeightMultiplier = DataBlackboard.AntsIAConfiguration.EnemyHealthWeightMultiplier;
+			enemyDamageWeightMultiplier = DataBlackboard.AntsIAConfiguration.EnemyDamageWeightMultiplier;
+			enemySpeedWeightMultiplier = DataBlackboard.AntsIAConfiguration.EnemySpeedWeightMultiplier;
+
+			rangeToDefend = DataBlackboard.AntsIAConfiguration.RangeToDefend;
+
 			potentialThreats = new List<uint>();
 			hasSomeAntAssigned = new Dictionary<uint, bool>();
 
 			distancesToFlag = new Dictionary<uint, List<TCoordinate>>();
-			for (uint i = 1; i <= distanceToDefend; i++)
+			for (uint i = 1; i <= rangeToDefend; i++)
 			{
 				distancesToFlag.Add(i, CoordinateUtils<TCoordinate>.GetCoordinatesInRing(FlagCoordinate, i));
 			}
@@ -81,19 +97,19 @@ namespace AnticTest.Architecture.GameLogic.Strategies
 			potentialThreats.Clear();
 			foreach (KeyValuePair<uint, List<TCoordinate>> distanceToFlag in distancesToFlag)
 			{
-				List<(int cellThreat, List<uint> enemiesId)> enemiesInDestance = new List<(int, List<uint>)>();
+				List<(float cellThreat, List<uint> enemiesId)> enemiesInDestance = new List<(float, List<uint>)>();
 				foreach (TCoordinate coordinate in distanceToFlag.Value)
 				{
 					List<uint> enemiesInCoordinate = Map.GetAllEntitiesIn<EnemyBug<TCell, TCoordinate>>(coordinate);
-					int cellThreat = enemiesInCoordinate.Count;
+					float cellThreat = enemiesInCoordinate.Count * enemyDistanceWeightMultiplier;
 					foreach (uint enemyId in enemiesInCoordinate)
 					{
 						MobileEntity<TCell, TCoordinate> enemy = (EnemyBug<TCell, TCoordinate>)EntityRegistry[enemyId];
-						cellThreat += enemy.Speed;
-						cellThreat += enemy.Health;
-						cellThreat += enemy.Damage;
+						cellThreat += enemy.Health * enemyHealthWeightMultiplier;
+						cellThreat += enemy.Damage * enemyDamageWeightMultiplier;
+						cellThreat += enemy.Speed * enemySpeedWeightMultiplier;
 					}
-					enemiesInDestance.Add((enemiesInCoordinate.Count, enemiesInCoordinate));
+					enemiesInDestance.Add((cellThreat, enemiesInCoordinate));
 				}
 				enemiesInDestance.Sort((a, b) => a.cellThreat.CompareTo(b.cellThreat));
 				foreach ((int cellThreat, List<uint> enemiesId) enemies in enemiesInDestance)
