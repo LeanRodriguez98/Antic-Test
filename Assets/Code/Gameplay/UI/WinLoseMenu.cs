@@ -45,7 +45,6 @@ namespace AnticTest.Gameplay.UI
 		private void DisplayPanel(bool win)
 		{
 			winLosePanel.SetActive(true);
-			Time.timeScale = 0.0f;
 			winLoseText.text = win ? WIN_TEXT : WIN_LOSE;
 		}
 
